@@ -1,15 +1,14 @@
 """Filesystem Middleware for managing learner profiles and session data."""
 
-from typing import Optional, Any
-import json
+from typing import Optional
 
 from app.storage.file_backend import FileBackend
 from app.storage.schemas import (
+    AssessmentResult,
+    CompletedCourse,
     LearnerProfile,
     LearningPreferences,
-    AssessmentResult,
     SkillHistory,
-    CompletedCourse,
 )
 
 
@@ -103,7 +102,9 @@ class FilesystemMiddleware:
         return {
             "success": success,
             "path": path,
-            "message": f"File written successfully: {path}" if success else f"Failed to write: {path}",
+            "message": f"File written successfully: {path}"
+            if success
+            else f"Failed to write: {path}",
         }
 
     async def edit_file(self, path: str, old_content: str, new_content: str) -> dict:
@@ -122,7 +123,9 @@ class FilesystemMiddleware:
         return {
             "success": success,
             "path": path,
-            "message": f"File edited successfully: {path}" if success else f"Failed to edit: {path}",
+            "message": f"File edited successfully: {path}"
+            if success
+            else f"Failed to edit: {path}",
         }
 
     # High-level convenience methods
@@ -175,9 +178,7 @@ class FilesystemMiddleware:
         """Add assessment history entry."""
         return await self.backend.append_assessment_history(user_id, summary)
 
-    async def save_diagnosis_markdown(
-        self, session_id: str, phase: int, content: str
-    ) -> bool:
+    async def save_diagnosis_markdown(self, session_id: str, phase: int, content: str) -> bool:
         """Save diagnosis results as markdown."""
         return await self.backend.write_diagnosis_markdown(session_id, phase, content)
 
@@ -224,7 +225,7 @@ class FilesystemMiddleware:
 
         if context.get("profile"):
             profile = context["profile"]
-            lines.append(f"### 基本プロフィール")
+            lines.append("### 基本プロフィール")
             lines.append(f"- 名前: {profile.get('name', '不明')}")
             lines.append(f"- 経験年数: {profile.get('years_of_experience', 0)}年")
             lines.append(f"- 目標: {profile.get('goal', '未設定')}")
@@ -233,22 +234,23 @@ class FilesystemMiddleware:
 
         if context.get("preferences"):
             prefs = context["preferences"]
-            lines.append(f"### 学習スタイル")
-            lines.append(f"- プロジェクトベース: {'はい' if prefs.get('project_based') else 'いいえ'}")
+            lines.append("### 学習スタイル")
+            lines.append(
+                f"- プロジェクトベース: {'はい' if prefs.get('project_based') else 'いいえ'}"
+            )
             lines.append(f"- 希望言語: {', '.join(prefs.get('preferred_languages', []))}")
             lines.append("")
 
         if context.get("skill_history"):
             latest = context["skill_history"][-1] if context["skill_history"] else None
             if latest:
-                lines.append(f"### 最新スキルレベル")
+                lines.append("### 最新スキルレベル")
                 lines.append(f"- 全体レベル: {latest.get('overall_level', 0)}/10")
                 lines.append("")
 
         if context.get("assessment_history"):
-            lines.append(f"### 診断履歴")
+            lines.append("### 診断履歴")
             lines.append(f"- 過去の診断回数: {len(context['assessment_history'])}回")
             lines.append("")
 
         return "\n".join(lines)
-

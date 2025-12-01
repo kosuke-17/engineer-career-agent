@@ -1,3 +1,1 @@
 """Storage tests module."""
-
-

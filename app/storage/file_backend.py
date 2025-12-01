@@ -136,9 +136,7 @@ class FileBackend:
     async def save_profile(self, profile: LearnerProfile) -> bool:
         """Save learner profile."""
         profile.updated_at = datetime.now()
-        return await self.write_json(
-            f"/memories/{profile.user_id}/profile.json", profile
-        )
+        return await self.write_json(f"/memories/{profile.user_id}/profile.json", profile)
 
     async def get_preferences(self, user_id: str) -> Optional[LearningPreferences]:
         """Get learning preferences."""
@@ -154,9 +152,7 @@ class FileBackend:
 
     async def get_assessment(self, session_id: str) -> Optional[AssessmentResult]:
         """Get assessment result by session ID."""
-        return await self.read_json(
-            f"/sessions/{session_id}/assessment.json", AssessmentResult
-        )
+        return await self.read_json(f"/sessions/{session_id}/assessment.json", AssessmentResult)
 
     async def save_assessment(self, assessment: AssessmentResult) -> bool:
         """Save assessment result."""
@@ -206,17 +202,11 @@ class FileBackend:
         content = json.dumps(
             [c.model_dump(mode="json") for c in existing], indent=2, ensure_ascii=False
         )
-        return await self.write_file(
-            f"/memories/{user_id}/completed_courses.json", content
-        )
+        return await self.write_file(f"/memories/{user_id}/completed_courses.json", content)
 
-    async def write_diagnosis_markdown(
-        self, session_id: str, phase: int, content: str
-    ) -> bool:
+    async def write_diagnosis_markdown(self, session_id: str, phase: int, content: str) -> bool:
         """Write diagnosis results as markdown."""
-        return await self.write_file(
-            f"/sessions/{session_id}/phase_{phase}_results.md", content
-        )
+        return await self.write_file(f"/sessions/{session_id}/phase_{phase}_results.md", content)
 
     async def get_assessment_history(self, user_id: str) -> list[dict]:
         """Get assessment history for a user."""
@@ -229,14 +219,10 @@ class FileBackend:
         except json.JSONDecodeError:
             return []
 
-    async def append_assessment_history(
-        self, user_id: str, assessment_summary: dict
-    ) -> bool:
+    async def append_assessment_history(self, user_id: str, assessment_summary: dict) -> bool:
         """Append to assessment history."""
         existing = await self.get_assessment_history(user_id)
         existing.append(assessment_summary)
 
         content = json.dumps(existing, indent=2, ensure_ascii=False)
-        return await self.write_file(
-            f"/memories/{user_id}/assessment_history.json", content
-        )
+        return await self.write_file(f"/memories/{user_id}/assessment_history.json", content)

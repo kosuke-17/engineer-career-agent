@@ -1,10 +1,10 @@
 """SubAgent Middleware for delegating specialized assessments."""
 
-from typing import Optional, Any
 from dataclasses import dataclass, field
+from typing import Any, Optional
 
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
 
 @dataclass
@@ -114,8 +114,7 @@ class SubAgentMiddleware:
     def get_system_prompt_addition(self) -> str:
         """Get system prompt addition for sub-agent delegation."""
         subagent_list = "\n".join(
-            f"- **{name}**: {config.description}"
-            for name, config in self.subagents.items()
+            f"- **{name}**: {config.description}" for name, config in self.subagents.items()
         )
 
         return f"""
@@ -211,9 +210,7 @@ class SubAgentOrchestrator:
         self.middleware = middleware
         self.assessment_results: dict[str, Any] = {}
 
-    async def run_foundation_assessment(
-        self, context: str, user_responses: list[str]
-    ) -> dict:
+    async def run_foundation_assessment(self, context: str, user_responses: list[str]) -> dict:
         """Run foundation skills assessment."""
         combined_responses = "\n\n".join(user_responses)
         result = await self.middleware.delegate_to_subagent(
@@ -225,9 +222,7 @@ class SubAgentOrchestrator:
             self.assessment_results["foundation"] = result["response"]
         return result
 
-    async def run_domain_matching(
-        self, foundation_result: str, user_responses: list[str]
-    ) -> dict:
+    async def run_domain_matching(self, foundation_result: str, user_responses: list[str]) -> dict:
         """Run domain aptitude matching."""
         context = f"基礎スキル診断結果:\n{foundation_result}"
         combined_responses = "\n\n".join(user_responses)
@@ -240,9 +235,7 @@ class SubAgentOrchestrator:
             self.assessment_results["domain"] = result["response"]
         return result
 
-    async def run_technical_analysis(
-        self, domain: str, user_responses: list[str]
-    ) -> dict:
+    async def run_technical_analysis(self, domain: str, user_responses: list[str]) -> dict:
         """Run technical skills analysis for specific domain."""
         context = f"選定領域: {domain}\n以前の診断結果: {self.assessment_results}"
         combined_responses = "\n\n".join(user_responses)
@@ -271,4 +264,3 @@ class SubAgentOrchestrator:
     def get_all_results(self) -> dict:
         """Get all assessment results."""
         return self.assessment_results.copy()
-

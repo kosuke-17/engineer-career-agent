@@ -282,9 +282,7 @@ class DomainMatcherAgent:
         # Find highest scoring domain
         if self.domain_scores:
             primary = max(self.domain_scores, key=self.domain_scores.get)
-            scores_sorted = sorted(
-                self.domain_scores.items(), key=lambda x: x[1], reverse=True
-            )
+            scores_sorted = sorted(self.domain_scores.items(), key=lambda x: x[1], reverse=True)
             secondary = scores_sorted[1][0] if len(scores_sorted) > 1 else primary
         else:
             primary = "backend"

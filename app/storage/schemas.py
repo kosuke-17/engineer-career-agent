@@ -84,9 +84,7 @@ class CompletedCourse(BaseModel):
     course_name: str = Field(..., description="Course name")
     provider: Optional[str] = Field(default=None, description="Course provider")
     completed_at: datetime = Field(default_factory=datetime.now)
-    score: Optional[float] = Field(
-        default=None, ge=0, le=100, description="Completion score"
-    )
+    score: Optional[float] = Field(default=None, ge=0, le=100, description="Completion score")
     duration_hours: Optional[float] = Field(default=None, description="Course duration")
     skills_gained: list[str] = Field(default_factory=list)
 
@@ -103,16 +101,12 @@ class LearningPreferences(BaseModel):
     """Learning preferences schema."""
 
     user_id: str = Field(..., description="User identifier")
-    difficulty_level: str = Field(
-        default="gradual", description="Preferred difficulty progression"
-    )
+    difficulty_level: str = Field(default="gradual", description="Preferred difficulty progression")
     project_based: bool = Field(default=True)
     community_learning: bool = Field(default=False)
     preferred_languages: list[str] = Field(default_factory=list)
     preferred_domains: list[EngineeringDomain] = Field(default_factory=list)
-    time_commitment: str = Field(
-        default="moderate", description="Time commitment level"
-    )
+    time_commitment: str = Field(default="moderate", description="Time commitment level")
 
 
 class PhaseResult(BaseModel):
@@ -137,9 +131,7 @@ class AssessmentResult(BaseModel):
     phases: list[PhaseResult] = Field(default_factory=list)
     foundation_score: Optional[float] = Field(default=None, ge=0, le=10)
     recommended_domain: Optional[EngineeringDomain] = Field(default=None)
-    roadmap: Optional[dict] = Field(
-        default=None, description="Generated learning roadmap"
-    )
+    roadmap: Optional[dict] = Field(default=None, description="Generated learning roadmap")
     overall_assessment: Optional[str] = Field(default=None)
 
 

@@ -1,20 +1,19 @@
 """Tests for file backend storage."""
 
-import json
 from pathlib import Path
 
-import pytest
-import pytest_asyncio
+import pytest  # pyright: ignore[reportMissingImports]
+import pytest_asyncio  # pyright: ignore[reportMissingImports]
 
 from app.storage.file_backend import FileBackend
 from app.storage.schemas import (
+    CompletedCourse,
     LearnerProfile,
     LearningPreferences,
     LearningStyle,
     SkillHistory,
-    SkillScore,
     SkillLevel,
-    CompletedCourse,
+    SkillScore,
 )
 
 
@@ -169,16 +168,12 @@ class TestFileBackendSkillHistory:
 
         history1 = SkillHistory(
             overall_level=5.0,
-            skills=[
-                SkillScore(skill_name="Python", score=6.0, level=SkillLevel.INTERMEDIATE)
-            ],
+            skills=[SkillScore(skill_name="Python", score=6.0, level=SkillLevel.INTERMEDIATE)],
         )
 
         history2 = SkillHistory(
             overall_level=6.0,
-            skills=[
-                SkillScore(skill_name="Python", score=7.0, level=SkillLevel.ADVANCED)
-            ],
+            skills=[SkillScore(skill_name="Python", score=7.0, level=SkillLevel.ADVANCED)],
         )
 
         # Append histories
@@ -217,5 +212,3 @@ class TestFileBackendCourses:
         assert len(courses) == 1
         assert courses[0].course_name == "Python入門"
         assert courses[0].score == 85.0
-
-

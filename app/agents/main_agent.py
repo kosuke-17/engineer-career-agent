@@ -1,39 +1,27 @@
 """Main Deep Agent for Learning Path Customization."""
 
-from typing import Optional, Any
-from datetime import datetime
 import json
 import uuid
+from datetime import datetime
+from typing import Optional
 
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from langchain_core.tools import tool
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from app.config import get_settings
-from app.storage.file_backend import FileBackend
-from app.storage.schemas import (
-    LearnerProfile,
-    AssessmentResult,
-    PhaseResult,
-    SkillScore,
-    DomainAptitude,
-    EngineeringDomain,
-    SkillLevel,
-    LearningStyle,
-)
-from app.agents.middleware.todolist import TodoListMiddleware
 from app.agents.middleware.filesystem import FilesystemMiddleware
-from app.agents.middleware.subagent import SubAgentMiddleware, SubAgentOrchestrator
-from app.agents.subagents.foundation import FoundationAssessorAgent
+from app.agents.middleware.subagent import SubAgentMiddleware
+from app.agents.middleware.todolist import TodoListMiddleware
 from app.agents.subagents.domain import DomainMatcherAgent
+from app.agents.subagents.foundation import FoundationAssessorAgent
 from app.agents.subagents.technical import TechnicalAnalyzerAgent
-from app.tools.roadmap import generate_learning_roadmap
+from app.config import get_settings
 from app.models.diagnosis import (
-    DiagnosisSession,
     DiagnosisPhase,
+    DiagnosisSession,
     PhaseStatus,
-    Message,
 )
+from app.storage.file_backend import FileBackend
+from app.tools.roadmap import generate_learning_roadmap
 
 
 class LearningPathAgent:
@@ -230,7 +218,6 @@ class LearningPathAgent:
 
         # Get current phase
         current_phase = session.current_phase
-        todo_middleware = self.todo_middlewares.get(session_id)
 
         # Route to appropriate handler based on phase
         response = await self._handle_phase(
@@ -256,8 +243,6 @@ class LearningPathAgent:
         phase: DiagnosisPhase,
     ) -> str:
         """Handle message based on current phase."""
-        session_id = session.session_id
-
         if phase == DiagnosisPhase.FOUNDATION:
             return await self._handle_foundation_phase(session, user_message)
         elif phase == DiagnosisPhase.DOMAIN:
@@ -318,10 +303,10 @@ class LearningPathAgent:
         if foundation_result:
             foundation_context = f"""
 基礎スキル診断結果:
-- 総合スコア: {foundation_result.get('overall_score', 'N/A')}/10
-- プログラミング: {foundation_result.get('programming', {}).get('score', 'N/A')}/10
-- アルゴリズム: {foundation_result.get('algorithms', {}).get('score', 'N/A')}/10
-- データ構造: {foundation_result.get('data_structures', {}).get('score', 'N/A')}/10
+- 総合スコア: {foundation_result.get("overall_score", "N/A")}/10
+- プログラミング: {foundation_result.get("programming", {}).get("score", "N/A")}/10
+- アルゴリズム: {foundation_result.get("algorithms", {}).get("score", "N/A")}/10
+- データ構造: {foundation_result.get("data_structures", {}).get("score", "N/A")}/10
 """
 
         system_content = f"""{self.SYSTEM_PROMPT}
@@ -440,13 +425,15 @@ class LearningPathAgent:
         weekly_hours = preferences.get("learning_hours_per_week", 10)
 
         # Generate roadmap
-        roadmap_result = generate_learning_roadmap.invoke({
-            "foundation_score": foundation_score,
-            "recommended_domain": recommended_domain,
-            "technical_assessment": json.dumps(technical_result),
-            "learning_style": learning_style,
-            "available_hours_per_week": weekly_hours,
-        })
+        roadmap_result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": foundation_score,
+                "recommended_domain": recommended_domain,
+                "technical_assessment": json.dumps(technical_result),
+                "learning_style": learning_style,
+                "available_hours_per_week": weekly_hours,
+            }
+        )
 
         roadmap_data = json.loads(roadmap_result)
         self.assessment_data[session.session_id]["roadmap"] = roadmap_data
@@ -569,10 +556,14 @@ class LearningPathAgent:
             "session_id": session_id,
             "user_id": session.user_id,
             "current_phase": session.current_phase.value,
-            "phase_name": session.get_current_phase_info().name if session.get_current_phase_info() else "",
+            "phase_name": session.get_current_phase_info().name
+            if session.get_current_phase_info()
+            else "",
             "phases_completed": phases_completed,
             "total_phases": len(session.phases),
-            "progress_percentage": (phases_completed / len(session.phases) * 100) if session.phases else 0,
+            "progress_percentage": (phases_completed / len(session.phases) * 100)
+            if session.phases
+            else 0,
             "is_complete": session.is_complete,
             "todos": todo_status,
         }
@@ -601,4 +592,3 @@ class LearningPathAgent:
         if session_id not in self.todo_middlewares:
             return "セッションが見つかりません。"
         return self.todo_middlewares[session_id].format_for_display()
-

@@ -26,9 +26,7 @@ class Settings(BaseSettings):
     memories_dir: Path = Field(
         default=Path("./data/memories"), description="Long-term memory storage"
     )
-    sessions_dir: Path = Field(
-        default=Path("./data/sessions"), description="Session data storage"
-    )
+    sessions_dir: Path = Field(default=Path("./data/sessions"), description="Session data storage")
 
     # LLM Settings
     default_model: str = Field(

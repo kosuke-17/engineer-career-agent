@@ -1,8 +1,8 @@
 """TodoList Middleware for managing diagnosis phases."""
 
 from datetime import datetime
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -305,7 +305,6 @@ class TodoListMiddleware:
 
         completed = len(self.todo_list.get_completed_todos())
         total = len(self.todo_list.todos)
-        lines.append(f"\n**進捗: {completed}/{total} ({completed/total*100:.0f}%)**")
+        lines.append(f"\n**進捗: {completed}/{total} ({completed / total * 100:.0f}%)**")
 
         return "\n".join(lines)
-

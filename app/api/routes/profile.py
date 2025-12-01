@@ -1,21 +1,20 @@
 """Profile API endpoints."""
 
-from typing import Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
-from app.config import get_settings, Settings
+from app.config import Settings, get_settings
+from app.models.profile import (
+    CreateProfileRequest,
+    ProfileHistoryItem,
+    ProfileHistoryResponse,
+    UpdateProfileRequest,
+    UserProfile,
+)
 from app.storage.file_backend import FileBackend
 from app.storage.schemas import LearnerProfile, LearningPreferences, LearningStyle
-from app.models.profile import (
-    UserProfile,
-    CreateProfileRequest,
-    UpdateProfileRequest,
-    ProfileHistoryResponse,
-    ProfileHistoryItem,
-)
 
 router = APIRouter()
 
@@ -290,4 +289,3 @@ async def get_profile_history(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

@@ -42,3 +42,8 @@ ignore = ["E501"]
 [tool.coverage.run]
 source = ["app"]
 omit = ["tests/*"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.7",
+]

@@ -2,8 +2,6 @@
 
 import json
 
-import pytest
-
 from app.tools.roadmap import generate_learning_roadmap
 
 
@@ -12,13 +10,15 @@ class TestGenerateLearningRoadmap:
 
     def test_basic_roadmap_generation(self):
         """Test basic roadmap generation."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 5.0,
-            "recommended_domain": "backend",
-            "technical_assessment": json.dumps({"Python": {"score": 6}}),
-            "learning_style": "project_based",
-            "available_hours_per_week": 15,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 5.0,
+                "recommended_domain": "backend",
+                "technical_assessment": json.dumps({"Python": {"score": 6}}),
+                "learning_style": "project_based",
+                "available_hours_per_week": 15,
+            }
+        )
         data = json.loads(result)
 
         assert "summary" in data
@@ -28,13 +28,15 @@ class TestGenerateLearningRoadmap:
 
     def test_roadmap_with_low_foundation(self):
         """Test roadmap for learner with low foundation score."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 2.0,
-            "recommended_domain": "frontend",
-            "technical_assessment": "{}",
-            "learning_style": "video",
-            "available_hours_per_week": 5,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 2.0,
+                "recommended_domain": "frontend",
+                "technical_assessment": "{}",
+                "learning_style": "video",
+                "available_hours_per_week": 5,
+            }
+        )
         data = json.loads(result)
 
         profile = data["learner_profile"]
@@ -43,13 +45,15 @@ class TestGenerateLearningRoadmap:
 
     def test_roadmap_with_high_foundation(self):
         """Test roadmap for learner with high foundation score."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 8.0,
-            "recommended_domain": "devops",
-            "technical_assessment": "{}",
-            "learning_style": "text",
-            "available_hours_per_week": 20,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 8.0,
+                "recommended_domain": "devops",
+                "technical_assessment": "{}",
+                "learning_style": "text",
+                "available_hours_per_week": 20,
+            }
+        )
         data = json.loads(result)
 
         profile = data["learner_profile"]
@@ -58,13 +62,15 @@ class TestGenerateLearningRoadmap:
 
     def test_roadmap_phases_structure(self):
         """Test that each phase has required fields."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 5.0,
-            "recommended_domain": "backend",
-            "technical_assessment": "{}",
-            "learning_style": "project_based",
-            "available_hours_per_week": 10,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 5.0,
+                "recommended_domain": "backend",
+                "technical_assessment": "{}",
+                "learning_style": "project_based",
+                "available_hours_per_week": 10,
+            }
+        )
         data = json.loads(result)
 
         for phase in data["phases"]:
@@ -78,13 +84,15 @@ class TestGenerateLearningRoadmap:
 
     def test_roadmap_weekly_schedule(self):
         """Test weekly schedule suggestion."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 5.0,
-            "recommended_domain": "backend",
-            "technical_assessment": "{}",
-            "learning_style": "project_based",
-            "available_hours_per_week": 20,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 5.0,
+                "recommended_domain": "backend",
+                "technical_assessment": "{}",
+                "learning_style": "project_based",
+                "available_hours_per_week": 20,
+            }
+        )
         data = json.loads(result)
 
         schedule = data["weekly_schedule_suggestion"]
@@ -94,16 +102,16 @@ class TestGenerateLearningRoadmap:
 
     def test_success_tips_included(self):
         """Test that success tips are included."""
-        result = generate_learning_roadmap.invoke({
-            "foundation_score": 5.0,
-            "recommended_domain": "backend",
-            "technical_assessment": "{}",
-            "learning_style": "project_based",
-            "available_hours_per_week": 10,
-        })
+        result = generate_learning_roadmap.invoke(
+            {
+                "foundation_score": 5.0,
+                "recommended_domain": "backend",
+                "technical_assessment": "{}",
+                "learning_style": "project_based",
+                "available_hours_per_week": 10,
+            }
+        )
         data = json.loads(result)
 
         assert "success_tips" in data
         assert len(data["success_tips"]) > 0
-
-

@@ -33,7 +33,11 @@ def generate_learning_roadmap(
     """
     # Parse technical assessment if it's a string
     try:
-        tech_data = json.loads(technical_assessment) if isinstance(technical_assessment, str) else technical_assessment
+        tech_data = (
+            json.loads(technical_assessment)
+            if isinstance(technical_assessment, str)
+            else technical_assessment
+        )
     except json.JSONDecodeError:
         tech_data = {}
 
@@ -120,7 +124,9 @@ def generate_learning_roadmap(
                 "phase": 1,
                 "name": "基礎固め期間（1-3ヶ月目）",
                 "duration_weeks": int(12 * duration_multiplier),
-                "focus": stack["core"] if not focus_foundation else ["プログラミング基礎", "アルゴリズム", "データ構造"],
+                "focus": stack["core"]
+                if not focus_foundation
+                else ["プログラミング基礎", "アルゴリズム", "データ構造"],
                 "goals": [
                     "基礎的な概念の確実な理解",
                     "小規模なプロジェクトの完成",
@@ -254,4 +260,3 @@ def generate_learning_roadmap(
     }
 
     return json.dumps(roadmap, ensure_ascii=False, indent=2)
-

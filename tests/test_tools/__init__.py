@@ -1,3 +1,1 @@
 """Tools tests module."""
-
-

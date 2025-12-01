@@ -2,16 +2,16 @@
 
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
-from app.config import get_settings, Settings
 from app.agents.main_agent import LearningPathAgent
+from app.config import Settings, get_settings
 from app.models.diagnosis import (
-    StartDiagnosisRequest,
-    SendMessageRequest,
-    DiagnosisStatusResponse,
     DiagnosisMessageResponse,
     DiagnosisPhase,
+    DiagnosisStatusResponse,
+    SendMessageRequest,
+    StartDiagnosisRequest,
 )
 
 router = APIRouter()
@@ -226,4 +226,3 @@ async def get_session_todos(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

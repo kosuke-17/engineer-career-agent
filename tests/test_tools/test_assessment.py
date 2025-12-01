@@ -2,11 +2,9 @@
 
 import json
 
-import pytest
-
 from app.tools.assessment import (
-    assess_foundation_skills,
     assess_domain_aptitude,
+    assess_foundation_skills,
     assess_technical_depth,
     fetch_learning_resources,
 )
@@ -82,10 +80,12 @@ class TestAssessTechnicalDepth:
 
     def test_known_technologies(self):
         """Test assessment for known technologies."""
-        result = assess_technical_depth.invoke({
-            "domain": "backend",
-            "technologies": "Python,FastAPI",
-        })
+        result = assess_technical_depth.invoke(
+            {
+                "domain": "backend",
+                "technologies": "Python,FastAPI",
+            }
+        )
         data = json.loads(result)
 
         assert "domain" in data
@@ -95,10 +95,12 @@ class TestAssessTechnicalDepth:
 
     def test_unknown_technology(self):
         """Test handling of unknown technology."""
-        result = assess_technical_depth.invoke({
-            "domain": "backend",
-            "technologies": "UnknownTech",
-        })
+        result = assess_technical_depth.invoke(
+            {
+                "domain": "backend",
+                "technologies": "UnknownTech",
+            }
+        )
         data = json.loads(result)
 
         assert "UnknownTech" in data["technologies"]
@@ -111,11 +113,13 @@ class TestFetchLearningResources:
 
     def test_beginner_python_video(self):
         """Test fetching beginner Python video resources."""
-        result = fetch_learning_resources.invoke({
-            "skill_level": "beginner",
-            "topic": "Python",
-            "preferred_format": "video",
-        })
+        result = fetch_learning_resources.invoke(
+            {
+                "skill_level": "beginner",
+                "topic": "Python",
+                "preferred_format": "video",
+            }
+        )
         data = json.loads(result)
 
         assert data["topic"] == "Python"
@@ -126,11 +130,13 @@ class TestFetchLearningResources:
 
     def test_intermediate_react_project(self):
         """Test fetching intermediate React project resources."""
-        result = fetch_learning_resources.invoke({
-            "skill_level": "intermediate",
-            "topic": "React",
-            "preferred_format": "project",
-        })
+        result = fetch_learning_resources.invoke(
+            {
+                "skill_level": "intermediate",
+                "topic": "React",
+                "preferred_format": "project",
+            }
+        )
         data = json.loads(result)
 
         assert data["topic"] == "React"
@@ -139,14 +145,14 @@ class TestFetchLearningResources:
 
     def test_unknown_topic_fallback(self):
         """Test fallback resources for unknown topic."""
-        result = fetch_learning_resources.invoke({
-            "skill_level": "beginner",
-            "topic": "UnknownTopic",
-            "preferred_format": "text",
-        })
+        result = fetch_learning_resources.invoke(
+            {
+                "skill_level": "beginner",
+                "topic": "UnknownTopic",
+                "preferred_format": "text",
+            }
+        )
         data = json.loads(result)
 
         assert "resources" in data
         assert "note" in data  # Should include a note about fallback
-
-
