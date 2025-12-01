@@ -1,2 +1,41 @@
+# Environment
 .env
+
+# uv
 uv.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Data directories (keep structure, ignore content)
+data/memories/*
+data/sessions/*
+!data/memories/.gitkeep
+!data/sessions/.gitkeep
