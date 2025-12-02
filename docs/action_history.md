@@ -173,6 +173,87 @@
 
 ---
 
+## Phase 9: 診断レスポンス構造化 ✅
+
+### 実装日: 2025年12月2日
+
+### 背景
+- 診断の対話が長すぎる問題を解決
+- 自由記述チャット形式から構造化された選択式質問形式に変更
+
+### 実施内容
+
+1. **DTO層の拡張** (`app/application/dto/diagnosis_dto.py`)
+   - `QuestionOption` - 選択肢データクラス
+   - `Question` - 構造化質問データクラス（単一/複数選択対応）
+   - `Answer` - 回答データクラス
+   - `StructuredResponse` - LLMからの構造化レスポンス
+   - `StartDiagnosisResponse`, `SendMessageRequest`, `SendMessageResponse` を新構造に変更
+
+2. **Messageエンティティの拡張** (`app/domain/entities/diagnosis.py`)
+   - `questions` フィールド追加（AIからの質問を保存）
+   - `answers` フィールド追加（ユーザーの回答を保存）
+   - `add_message` メソッドを拡張
+
+3. **LLMServiceインターフェースの変更** (`app/application/services/llm_service.py`)
+   - `generate_initial_message` → `generate_initial_response` に変更
+   - `process_message` → `process_answers` に変更
+   - 戻り値を `StructuredResponse` に変更
+
+4. **LLMService実装の変更** (`app/infrastructure/llm/llm_service.py`)
+   - システムプロンプトをJSON出力形式に変更
+   - 各フェーズの質問を2-3問のセットで効率化
+   - `_parse_structured_response` メソッド追加
+   - `_format_answers` メソッド追加
+
+5. **UseCase層の更新**
+   - `StartDiagnosisUseCase` - 構造化レスポンス対応
+   - `ProcessMessageUseCase` - 回答ベースの処理に変更
+
+6. **APIルーターの更新** (`app/presentation/api/routes/diagnosis_router.py`)
+   - `QuestionOptionModel`, `QuestionModel`, `AnswerModel` Pydanticモデル追加
+   - リクエスト/レスポンス形式を新構造に変更
+
+7. **永続化層の更新** (`app/infrastructure/persistence/file_diagnosis_repository.py`)
+   - `questions`/`answers` フィールドの永続化対応
+
+### 新しいAPI構造
+
+**レスポンス形式:**
+```json
+{
+  "session_id": "xxx",
+  "message": "AIからの説明・コメント",
+  "questions": [
+    {
+      "id": "q1",
+      "text": "質問文",
+      "type": "single | multiple",
+      "options": [
+        { "id": "opt1", "label": "選択肢1" },
+        { "id": "opt2", "label": "選択肢2" }
+      ]
+    }
+  ],
+  "current_phase": "foundation",
+  "phase_changed": false,
+  "is_completed": false,
+  "progress_percentage": 20.0
+}
+```
+
+**リクエスト形式:**
+```json
+{
+  "answers": [
+    { "question_id": "q1", "selected_options": ["opt1"] }
+  ],
+  "supplement": "補足テキスト（任意）"
+}
+```
+
+---
+
 ## 今後の拡張案
 
 1. **認証システム**

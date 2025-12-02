@@ -1,28 +1,35 @@
 """Data Transfer Objects."""
 
 from .diagnosis_dto import (
-    StartDiagnosisRequest,
-    StartDiagnosisResponse,
+    Answer,
+    DiagnosisResultResponse,
+    DiagnosisStatusResponse,
+    Question,
+    QuestionOption,
     SendMessageRequest,
     SendMessageResponse,
-    DiagnosisStatusResponse,
-    DiagnosisResultResponse,
+    StartDiagnosisRequest,
+    StartDiagnosisResponse,
+    StructuredResponse,
 )
 from .profile_dto import (
     CreateProfileRequest,
-    UpdateProfileRequest,
     ProfileResponse,
+    UpdateProfileRequest,
 )
 
 __all__ = [
-    "StartDiagnosisRequest",
-    "StartDiagnosisResponse",
+    "Answer",
+    "CreateProfileRequest",
+    "DiagnosisResultResponse",
+    "DiagnosisStatusResponse",
+    "ProfileResponse",
+    "Question",
+    "QuestionOption",
     "SendMessageRequest",
     "SendMessageResponse",
-    "DiagnosisStatusResponse",
-    "DiagnosisResultResponse",
-    "CreateProfileRequest",
+    "StartDiagnosisRequest",
+    "StartDiagnosisResponse",
+    "StructuredResponse",
     "UpdateProfileRequest",
-    "ProfileResponse",
 ]
-

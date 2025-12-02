@@ -3,7 +3,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from app.domain.entities import DiagnosisSession, Message, PhaseInfo
 from app.domain.repositories import DiagnosisRepository
@@ -81,7 +81,7 @@ class FileDiagnosisRepository(DiagnosisRepository):
         file_path = self._get_file_path(session_id)
         return file_path.exists()
 
-    def _session_to_dict(self, session: DiagnosisSession) -> dict:
+    def _session_to_dict(self, session: DiagnosisSession) -> dict[str, Any]:
         """Convert session entity to dictionary."""
         return {
             "id": session.id,
@@ -103,6 +103,8 @@ class FileDiagnosisRepository(DiagnosisRepository):
                     "content": msg.content,
                     "timestamp": msg.timestamp.isoformat(),
                     "phase": msg.phase.value if msg.phase else None,
+                    "questions": msg.questions,
+                    "answers": msg.answers,
                 }
                 for msg in session.messages
             ],
@@ -111,7 +113,7 @@ class FileDiagnosisRepository(DiagnosisRepository):
             "updated_at": session.updated_at.isoformat(),
         }
 
-    def _dict_to_session(self, data: dict) -> DiagnosisSession:
+    def _dict_to_session(self, data: dict[str, Any]) -> DiagnosisSession:
         """Convert dictionary to session entity."""
         # Parse phases
         phases = {}
@@ -160,6 +162,8 @@ class FileDiagnosisRepository(DiagnosisRepository):
                     content=msg_data["content"],
                     timestamp=timestamp,
                     phase=phase,
+                    questions=msg_data.get("questions"),
+                    answers=msg_data.get("answers"),
                 )
             )
 

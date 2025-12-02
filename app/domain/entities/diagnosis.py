@@ -43,6 +43,8 @@ class Message:
     content: str
     timestamp: datetime = field(default_factory=datetime.now)
     phase: Optional[Phase] = None
+    questions: Optional[list[dict[str, Any]]] = None  # AIからの質問
+    answers: Optional[list[dict[str, Any]]] = None  # ユーザーの回答
 
 
 @dataclass
@@ -106,9 +108,28 @@ class DiagnosisSession:
 
         self.updated_at = datetime.now()
 
-    def add_message(self, role: str, content: str) -> None:
-        """Add a message to the conversation."""
-        message = Message(role=role, content=content, phase=self.current_phase)
+    def add_message(
+        self,
+        role: str,
+        content: str,
+        questions: Optional[list[dict[str, Any]]] = None,
+        answers: Optional[list[dict[str, Any]]] = None,
+    ) -> None:
+        """Add a message to the conversation.
+
+        Args:
+            role: The role of the message sender ("user" or "assistant").
+            content: The text content of the message.
+            questions: Optional list of questions (for assistant messages).
+            answers: Optional list of answers (for user messages).
+        """
+        message = Message(
+            role=role,
+            content=content,
+            phase=self.current_phase,
+            questions=questions,
+            answers=answers,
+        )
         self.messages.append(message)
         self.updated_at = datetime.now()
 
@@ -130,9 +151,17 @@ class DiagnosisSession:
         completed = len(self.get_completed_phases())
         return (completed / total) * 100 if total > 0 else 0
 
-    def get_conversation_history(self) -> list[dict[str, str]]:
-        """Get conversation history in a simple format."""
-        return [{"role": msg.role, "content": msg.content} for msg in self.messages]
+    def get_conversation_history(self) -> list[dict[str, Any]]:
+        """Get conversation history in a detailed format."""
+        return [
+            {
+                "role": msg.role,
+                "content": msg.content,
+                "questions": msg.questions,
+                "answers": msg.answers,
+            }
+            for msg in self.messages
+        ]
 
     def to_dict(self) -> dict[str, Any]:
         """Convert session to dictionary representation."""
@@ -156,6 +185,8 @@ class DiagnosisSession:
                     "content": msg.content,
                     "timestamp": msg.timestamp.isoformat(),
                     "phase": msg.phase.value if msg.phase else None,
+                    "questions": msg.questions,
+                    "answers": msg.answers,
                 }
                 for msg in self.messages
             ],

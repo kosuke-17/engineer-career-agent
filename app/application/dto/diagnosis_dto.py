@@ -5,6 +5,32 @@ from typing import Any, Optional
 
 
 @dataclass
+class QuestionOption:
+    """A single option for a question."""
+
+    id: str
+    label: str
+
+
+@dataclass
+class Question:
+    """A structured question with options."""
+
+    id: str
+    text: str
+    type: str  # "single" or "multiple"
+    options: list[QuestionOption] = field(default_factory=list)
+
+
+@dataclass
+class Answer:
+    """An answer to a question."""
+
+    question_id: str
+    selected_options: list[str] = field(default_factory=list)
+
+
+@dataclass
 class StartDiagnosisRequest:
     """Request to start a new diagnosis session."""
 
@@ -17,24 +43,27 @@ class StartDiagnosisResponse:
 
     session_id: str
     message: str
+    questions: list[Question]
     current_phase: str
     phases: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
 class SendMessageRequest:
-    """Request to send a message in a diagnosis session."""
+    """Request to send answers in a diagnosis session."""
 
     session_id: str
-    message: str
+    answers: list[Answer] = field(default_factory=list)
+    supplement: Optional[str] = None
 
 
 @dataclass
 class SendMessageResponse:
-    """Response after processing a message."""
+    """Response after processing answers."""
 
     session_id: str
-    response: str
+    message: str
+    questions: list[Question]
     current_phase: str
     phase_changed: bool = False
     is_completed: bool = False
@@ -66,3 +95,11 @@ class DiagnosisResultResponse:
     roadmap: Optional[dict[str, Any]] = None
     summary: Optional[str] = None
 
+
+@dataclass
+class StructuredResponse:
+    """Structured response from LLM containing message and questions."""
+
+    message: str
+    questions: list[Question] = field(default_factory=list)
+    should_advance: bool = False

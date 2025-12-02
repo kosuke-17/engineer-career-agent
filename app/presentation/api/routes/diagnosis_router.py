@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app.application.dto import (
+    Answer,
     SendMessageRequest,
     StartDiagnosisRequest,
 )
@@ -25,6 +26,30 @@ from app.presentation.api.dependencies import (
 router = APIRouter()
 
 
+# Shared models for questions
+class QuestionOptionModel(BaseModel):
+    """A single option for a question."""
+
+    id: str
+    label: str
+
+
+class QuestionModel(BaseModel):
+    """A structured question with options."""
+
+    id: str
+    text: str
+    type: str  # "single" or "multiple"
+    options: list[QuestionOptionModel]
+
+
+class AnswerModel(BaseModel):
+    """An answer to a question."""
+
+    question_id: str
+    selected_options: list[str]
+
+
 # Request/Response models for API
 class StartSessionRequest(BaseModel):
     """Request to start a new diagnosis session."""
@@ -36,22 +61,25 @@ class StartSessionResponse(BaseModel):
     """Response after starting a diagnosis session."""
 
     session_id: str
-    content: str
+    message: str
+    questions: list[QuestionModel]
     current_phase: str
     phases: list[dict[str, Any]]
 
 
 class SendMessageRequestModel(BaseModel):
-    """Request to send a message."""
+    """Request to send answers."""
 
-    message: str
+    answers: list[AnswerModel]
+    supplement: Optional[str] = None
 
 
 class SendMessageResponseModel(BaseModel):
-    """Response after sending a message."""
+    """Response after sending answers."""
 
     session_id: str
-    content: str
+    message: str
+    questions: list[QuestionModel]
     current_phase: str
     phase_changed: bool
     is_completed: bool
@@ -99,9 +127,21 @@ async def start_diagnosis(
     dto_request = StartDiagnosisRequest(user_id=request.user_id)
     result = await use_case.execute(dto_request)
 
+    # Convert DTO questions to Pydantic models
+    questions = [
+        QuestionModel(
+            id=q.id,
+            text=q.text,
+            type=q.type,
+            options=[QuestionOptionModel(id=opt.id, label=opt.label) for opt in q.options],
+        )
+        for q in result.questions
+    ]
+
     return StartSessionResponse(
         session_id=result.session_id,
-        content=result.message,
+        message=result.message,
+        questions=questions,
         current_phase=result.current_phase,
         phases=result.phases,
     )
@@ -113,11 +153,11 @@ async def send_message(
     request: SendMessageRequestModel,
     use_case: ProcessMessageUseCase = Depends(get_process_message_use_case),
 ) -> SendMessageResponseModel:
-    """Send a message in a diagnosis session.
+    """Send answers in a diagnosis session.
 
     Args:
         session_id: The session ID.
-        request: The message request.
+        request: The answers request.
         use_case: The process message use case.
 
     Returns:
@@ -127,15 +167,37 @@ async def send_message(
         HTTPException: If the session is not found.
     """
     try:
+        # Convert Pydantic models to DTO
+        answers = [
+            Answer(
+                question_id=a.question_id,
+                selected_options=a.selected_options,
+            )
+            for a in request.answers
+        ]
+
         dto_request = SendMessageRequest(
             session_id=session_id,
-            message=request.message,
+            answers=answers,
+            supplement=request.supplement,
         )
         result = await use_case.execute(dto_request)
 
+        # Convert DTO questions to Pydantic models
+        questions = [
+            QuestionModel(
+                id=q.id,
+                text=q.text,
+                type=q.type,
+                options=[QuestionOptionModel(id=opt.id, label=opt.label) for opt in q.options],
+            )
+            for q in result.questions
+        ]
+
         return SendMessageResponseModel(
             session_id=result.session_id,
-            content=result.response,
+            message=result.message,
+            questions=questions,
             current_phase=result.current_phase,
             phase_changed=result.phase_changed,
             is_completed=result.is_completed,

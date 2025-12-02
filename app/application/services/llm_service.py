@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
+from app.application.dto import Answer, StructuredResponse
 from app.domain.entities import DiagnosisSession
 
 
@@ -14,31 +15,32 @@ class LLMServiceInterface(ABC):
     """
 
     @abstractmethod
-    async def generate_initial_message(
+    async def generate_initial_response(
         self, session: DiagnosisSession
-    ) -> str:
-        """Generate the initial message for a diagnosis session.
+    ) -> StructuredResponse:
+        """Generate the initial response for a diagnosis session.
 
         Args:
             session: The diagnosis session.
 
         Returns:
-            The initial message string.
+            A StructuredResponse containing message and questions.
         """
         pass
 
     @abstractmethod
-    async def process_message(
-        self, session: DiagnosisSession, user_message: str
-    ) -> tuple[str, bool]:
-        """Process a user message and generate a response.
+    async def process_answers(
+        self, session: DiagnosisSession, answers: list[Answer], supplement: Optional[str]
+    ) -> StructuredResponse:
+        """Process user answers and generate a response.
 
         Args:
             session: The diagnosis session.
-            user_message: The user's message.
+            answers: The user's answers to questions.
+            supplement: Optional supplementary text from the user.
 
         Returns:
-            A tuple of (response_message, should_advance_phase).
+            A StructuredResponse containing message, questions, and should_advance flag.
         """
         pass
 
@@ -74,4 +76,3 @@ class LLMServiceInterface(ABC):
             A dictionary containing the roadmap data.
         """
         pass
-

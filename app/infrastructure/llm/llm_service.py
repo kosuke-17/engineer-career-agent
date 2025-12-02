@@ -1,9 +1,12 @@
 """LLM service implementation."""
 
+import json
+import re
 from typing import Any, Optional
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
+from app.application.dto import Answer, Question, QuestionOption, StructuredResponse
 from app.application.services.llm_service import LLMServiceInterface
 from app.domain.entities import DiagnosisSession
 from app.domain.value_objects import Phase
@@ -17,8 +20,10 @@ class LLMService(LLMServiceInterface):
     def __init__(self):
         self.llm = get_llm()
 
-    async def generate_initial_message(self, session: DiagnosisSession) -> str:
-        """Generate the initial message for a diagnosis session."""
+    async def generate_initial_response(
+        self, session: DiagnosisSession
+    ) -> StructuredResponse:
+        """Generate the initial response for a diagnosis session."""
         system_prompt = self._get_system_prompt(session.current_phase)
 
         messages = [
@@ -27,12 +32,15 @@ class LLMService(LLMServiceInterface):
         ]
 
         response = await self.llm.ainvoke(messages)
-        return str(response.content)
+        return self._parse_structured_response(str(response.content))
 
-    async def process_message(
-        self, session: DiagnosisSession, user_message: str
-    ) -> tuple[str, bool]:
-        """Process a user message and generate a response."""
+    async def process_answers(
+        self,
+        session: DiagnosisSession,
+        answers: list[Answer],
+        supplement: Optional[str],
+    ) -> StructuredResponse:
+        """Process user answers and generate a response."""
         system_prompt = self._get_system_prompt(session.current_phase)
 
         # Build message history
@@ -40,29 +48,35 @@ class LLMService(LLMServiceInterface):
 
         for msg in session.messages:
             if msg.role == "user":
-                messages.append(HumanMessage(content=msg.content))
+                # Format user's answers for context
+                content = self._format_user_message(msg.content, msg.answers)
+                messages.append(HumanMessage(content=content))
             else:
-                from langchain_core.messages import AIMessage
-
                 messages.append(AIMessage(content=msg.content))
 
-        # Add the new user message
-        messages.append(HumanMessage(content=user_message))
+        # Format the new user answers
+        user_content = self._format_answers(answers, supplement)
+        messages.append(HumanMessage(content=user_content))
 
         response = await self.llm.ainvoke(messages)
-        response_text = str(response.content)
+        return self._parse_structured_response(str(response.content))
 
-        # Check if phase should advance
-        should_advance = self._should_advance_phase(response_text, session)
-
-        return response_text, should_advance
-
-    async def get_phase_result(self, session: DiagnosisSession) -> Optional[dict[str, Any]]:
+    async def get_phase_result(
+        self, session: DiagnosisSession
+    ) -> Optional[dict[str, Any]]:
         """Get the result of the current phase."""
-        # Build analysis prompt
         analysis_prompt = self._get_analysis_prompt(session.current_phase)
 
-        conversation_text = "\n".join(f"{msg.role}: {msg.content}" for msg in session.messages)
+        # Build conversation summary including answers
+        conversation_parts = []
+        for msg in session.messages:
+            if msg.role == "user" and msg.answers:
+                formatted = self._format_user_message(msg.content, msg.answers)
+                conversation_parts.append(f"user: {formatted}")
+            else:
+                conversation_parts.append(f"{msg.role}: {msg.content}")
+
+        conversation_text = "\n".join(conversation_parts)
 
         messages = [
             SystemMessage(content=analysis_prompt),
@@ -72,30 +86,7 @@ class LLMService(LLMServiceInterface):
         ]
 
         response = await self.llm.ainvoke(messages)
-
-        # Try to parse JSON from response
-        import json
-        import re
-
-        response_text = str(response.content)
-
-        # Try to extract JSON from markdown code blocks
-        json_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", response_text)
-        if json_match:
-            try:
-                return json.loads(json_match.group(1))
-            except json.JSONDecodeError:
-                pass
-
-        # Try to parse the entire response as JSON
-        try:
-            return json.loads(response_text)
-        except json.JSONDecodeError:
-            # Return a basic structure if parsing fails
-            return {
-                "phase": session.current_phase.value,
-                "raw_response": response_text,
-            }
+        return self._parse_json_response(str(response.content))
 
     async def generate_roadmap(
         self,
@@ -144,7 +135,8 @@ class LLMService(LLMServiceInterface):
         )
 
         domain_summary = "\n".join(
-            f"- {a.get('domain', 'unknown')}: {a.get('score', 0)}/10" for a in domain_aptitudes
+            f"- {a.get('domain', 'unknown')}: {a.get('score', 0)}/10"
+            for a in domain_aptitudes
         )
 
         messages = [
@@ -163,82 +155,86 @@ JSON形式でロードマップを返してください。"""
         ]
 
         response = await self.llm.ainvoke(messages)
-
-        # Parse JSON from response
-        import json
-        import re
-
-        response_text = str(response.content)
-
-        json_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", response_text)
-        if json_match:
-            try:
-                return json.loads(json_match.group(1))
-            except json.JSONDecodeError:
-                pass
-
-        try:
-            return json.loads(response_text)
-        except json.JSONDecodeError:
-            return {
-                "error": "Failed to parse roadmap",
-                "raw_response": response_text,
-            }
+        result = self._parse_json_response(str(response.content))
+        return result or {"error": "Failed to parse roadmap"}
 
     def _get_system_prompt(self, phase: Phase) -> str:
-        """Get the system prompt for a phase."""
+        """Get the system prompt for a phase with structured output format."""
+        base_instruction = """
+あなたの応答は必ず以下のJSON形式で返してください:
+```json
+{
+    "message": "ユーザーへのメッセージ（説明やフィードバック）",
+    "questions": [
+        {
+            "id": "q1",
+            "text": "質問文",
+            "type": "single" または "multiple",
+            "options": [
+                {"id": "opt1", "label": "選択肢1"},
+                {"id": "opt2", "label": "選択肢2"}
+            ]
+        }
+    ],
+    "should_advance": false
+}
+```
+
+- "message": ユーザーへの説明やコメント
+- "questions": 選択式の質問リスト（1-3問程度）
+- "type": "single"は単一選択、"multiple"は複数選択可
+- "should_advance": このフェーズを完了して次に進むべき場合はtrue
+
+質問は2-3問を1セットで出し、回答を受けたら次の質問セットを出してください。
+2-3回の質問セットでフェーズを完了させてください。
+"""
+
         prompts = {
-            Phase.FOUNDATION: """あなたはエンジニアのスキル診断を行う専門家です。
+            Phase.FOUNDATION: f"""あなたはエンジニアのスキル診断を行う専門家です。
 現在は「基礎スキル診断」フェーズです。
 
-以下の項目について対話形式で評価してください:
-- プログラミング基礎（変数、関数、制御構文）
-- データ構造（配列、リスト、辞書、ツリー）
-- アルゴリズム基礎（ソート、検索、計算量）
-- バージョン管理（Git）
-- 基本的な問題解決能力
+以下の項目を効率的に評価してください:
+- プログラミング経験
+- データ構造・アルゴリズムの理解度
+- Git/バージョン管理の経験
 
-質問は1-2個ずつ行い、回答に基づいて次の質問を調整してください。
-10段階でスキルを評価してください。
-十分な情報が集まったら、「基礎スキルの診断が完了しました」と伝えてください。""",
-            Phase.DOMAIN: """あなたはエンジニアのキャリア診断を行う専門家です。
+{base_instruction}""",
+            Phase.DOMAIN: f"""あなたはエンジニアのキャリア診断を行う専門家です。
 現在は「専攻領域選定」フェーズです。
 
-以下の領域への適性を判定してください:
-- フロントエンド開発
-- バックエンド開発
-- フルスタック開発
-- DevOps/インフラ
-- 機械学習エンジニアリング
+以下の領域への適性と興味を判定してください:
+- フロントエンド / バックエンド / フルスタック
+- DevOps / インフラ
+- 機械学習 / データサイエンス
 - モバイル開発
-- システムプログラミング
 
-興味、経験、目標について質問し、最も適した領域を提案してください。
-十分な情報が集まったら、「領域適性の診断が完了しました」と伝えてください。""",
-            Phase.TECHNICAL: """あなたはエンジニアの技術スキル診断を行う専門家です。
+{base_instruction}""",
+            Phase.TECHNICAL: f"""あなたはエンジニアの技術スキル診断を行う専門家です。
 現在は「詳細技術診断」フェーズです。
 
-選定された領域に関する具体的な技術スキルを評価してください。
-フレームワーク、ツール、設計パターンなどの知識と経験を確認してください。
-十分な情報が集まったら、「技術診断が完了しました」と伝えてください。""",
-            Phase.ARCHITECTURE: """あなたはソフトウェアアーキテクチャの専門家です。
+選定された領域に関する具体的な技術スキルを評価してください:
+- 使用フレームワーク・ライブラリ
+- 開発ツール・環境
+- 設計パターンの理解
+
+{base_instruction}""",
+            Phase.ARCHITECTURE: f"""あなたはソフトウェアアーキテクチャの専門家です。
 現在は「アーキテクチャ適性」フェーズです。
 
 システム設計能力を評価してください:
 - スケーラビリティの考慮
-- セキュリティ設計
-- データモデリング
-- マイクロサービス vs モノリス
-- パフォーマンス最適化
+- セキュリティ・データモデリング
+- アーキテクチャパターンの理解
 
-十分な情報が集まったら、「アーキテクチャ診断が完了しました」と伝えてください。""",
-            Phase.ROADMAP: """あなたは学習ロードマップの専門家です。
+{base_instruction}""",
+            Phase.ROADMAP: f"""あなたは学習ロードマップの専門家です。
 現在は「学習ロードマップ生成」フェーズです。
 
-これまでの診断結果を踏まえて、最適な学習パスを提案してください。
-具体的なリソース（書籍、コース、プロジェクト）を含めてください。""",
+これまでの診断結果を踏まえて、学習目標を確認してください。
+
+{base_instruction}""",
         }
-        return prompts.get(phase, "診断を進めてください。")
+        return prompts.get(phase, f"診断を進めてください。\n{base_instruction}")
 
     def _get_analysis_prompt(self, phase: Phase) -> str:
         """Get the analysis prompt for extracting phase results."""
@@ -257,13 +253,96 @@ JSON形式でロードマップを返してください。"""
     "summary": "全体的なまとめ"
 }}"""
 
-    def _should_advance_phase(self, response: str, session: DiagnosisSession) -> bool:
-        """Check if the phase should advance based on the response."""
-        completion_phrases = [
-            "診断が完了しました",
-            "診断を完了しました",
-            "完了です",
-            "次のフェーズ",
-            "次に進みましょう",
-        ]
-        return any(phrase in response for phrase in completion_phrases)
+    def _format_answers(
+        self, answers: list[Answer], supplement: Optional[str]
+    ) -> str:
+        """Format user answers into a readable string."""
+        parts = []
+        for answer in answers:
+            selected = ", ".join(answer.selected_options)
+            parts.append(f"質問{answer.question_id}: {selected}")
+
+        if supplement:
+            parts.append(f"補足: {supplement}")
+
+        return "\n".join(parts)
+
+    def _format_user_message(
+        self, content: str, answers: Optional[list[dict[str, Any]]]
+    ) -> str:
+        """Format a user message with answers for context."""
+        if not answers:
+            return content
+
+        parts = [content] if content else []
+        for answer in answers:
+            question_id = answer.get("question_id", "?")
+            selected = ", ".join(answer.get("selected_options", []))
+            parts.append(f"Q{question_id}: {selected}")
+
+        return "\n".join(parts)
+
+    def _parse_structured_response(self, response_text: str) -> StructuredResponse:
+        """Parse LLM response into a StructuredResponse."""
+        parsed = self._parse_json_response(response_text)
+
+        if not parsed:
+            # Fallback if JSON parsing fails
+            return StructuredResponse(
+                message=response_text,
+                questions=[],
+                should_advance=False,
+            )
+
+        # Extract message
+        message = parsed.get("message", "")
+
+        # Extract questions
+        questions = []
+        for q_data in parsed.get("questions", []):
+            options = [
+                QuestionOption(id=opt.get("id", ""), label=opt.get("label", ""))
+                for opt in q_data.get("options", [])
+            ]
+            question = Question(
+                id=q_data.get("id", ""),
+                text=q_data.get("text", ""),
+                type=q_data.get("type", "single"),
+                options=options,
+            )
+            questions.append(question)
+
+        # Extract should_advance flag
+        should_advance = parsed.get("should_advance", False)
+
+        return StructuredResponse(
+            message=message,
+            questions=questions,
+            should_advance=should_advance,
+        )
+
+    def _parse_json_response(self, response_text: str) -> Optional[dict[str, Any]]:
+        """Parse JSON from LLM response."""
+        # Try to extract JSON from markdown code blocks
+        json_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", response_text)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+
+        # Try to parse the entire response as JSON
+        try:
+            return json.loads(response_text)
+        except json.JSONDecodeError:
+            pass
+
+        # Try to find JSON object in the text
+        json_obj_match = re.search(r"\{[\s\S]*\}", response_text)
+        if json_obj_match:
+            try:
+                return json.loads(json_obj_match.group(0))
+            except json.JSONDecodeError:
+                pass
+
+        return None

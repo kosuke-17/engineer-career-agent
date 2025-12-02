@@ -32,11 +32,26 @@ class StartDiagnosisUseCase:
         # Create a new diagnosis session
         session = DiagnosisSession.create(user_id=request.user_id)
 
-        # Generate initial message from LLM
-        initial_message = await self.llm_service.generate_initial_message(session)
+        # Generate initial structured response from LLM
+        initial_response = await self.llm_service.generate_initial_response(session)
 
-        # Add assistant's message to the session
-        session.add_message("assistant", initial_message)
+        # Convert questions to dict format for storage
+        questions_data = [
+            {
+                "id": q.id,
+                "text": q.text,
+                "type": q.type,
+                "options": [{"id": opt.id, "label": opt.label} for opt in q.options],
+            }
+            for q in initial_response.questions
+        ]
+
+        # Add assistant's message to the session with questions
+        session.add_message(
+            role="assistant",
+            content=initial_response.message,
+            questions=questions_data,
+        )
 
         # Save the session
         await self.diagnosis_repository.save(session)
@@ -54,8 +69,8 @@ class StartDiagnosisUseCase:
 
         return StartDiagnosisResponse(
             session_id=session.id,
-            message=initial_message,
+            message=initial_response.message,
+            questions=initial_response.questions,
             current_phase=session.current_phase.value,
             phases=phases,
         )
-
