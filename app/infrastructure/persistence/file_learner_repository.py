@@ -184,4 +184,3 @@ class FileLearnerRepository(LearnerRepository):
             updated_at=updated_at,
         )
         return learner
-

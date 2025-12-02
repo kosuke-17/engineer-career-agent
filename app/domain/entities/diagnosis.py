@@ -122,11 +122,7 @@ class DiagnosisSession:
 
     def get_completed_phases(self) -> list[PhaseInfo]:
         """Get all completed phases."""
-        return [
-            info
-            for info in self.phases.values()
-            if info.status == PhaseStatus.COMPLETED
-        ]
+        return [info for info in self.phases.values() if info.status == PhaseStatus.COMPLETED]
 
     def get_progress_percentage(self) -> float:
         """Calculate overall progress percentage."""
@@ -167,4 +163,3 @@ class DiagnosisSession:
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
-

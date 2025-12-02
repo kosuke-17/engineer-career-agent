@@ -122,12 +122,7 @@ class LearningRoadmap:
 
     def get_completed_milestones(self) -> int:
         """Get number of completed milestones."""
-        return sum(
-            1
-            for q in self.quarters
-            for m in q.milestones
-            if m.is_completed
-        )
+        return sum(1 for q in self.quarters for m in q.milestones if m.is_completed)
 
     def get_progress_percentage(self) -> float:
         """Calculate overall progress percentage."""
@@ -151,4 +146,3 @@ class LearningRoadmap:
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
-

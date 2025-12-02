@@ -5,15 +5,15 @@ from typing import Any, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
+from app.application.dto import (
+    CreateProfileRequest,
+    UpdateProfileRequest,
+)
 from app.application.use_cases import (
     CreateProfileUseCase,
     DeleteProfileUseCase,
     GetProfileUseCase,
     UpdateProfileUseCase,
-)
-from app.application.dto import (
-    CreateProfileRequest,
-    UpdateProfileRequest,
 )
 from app.presentation.api.dependencies import (
     get_create_profile_use_case,
@@ -21,7 +21,6 @@ from app.presentation.api.dependencies import (
     get_get_profile_use_case,
     get_update_profile_use_case,
 )
-
 
 router = APIRouter()
 
@@ -236,4 +235,3 @@ async def delete_profile(
             success=False,
             message=f"Profile {user_id} not found",
         )
-

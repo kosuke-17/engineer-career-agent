@@ -164,4 +164,3 @@ def reset_factory() -> None:
     """Reset the singleton factory (useful for testing)."""
     global _factory
     _factory = None
-

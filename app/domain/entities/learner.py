@@ -55,18 +55,14 @@ class Learner:
     def add_skill_score(self, score: SkillScore) -> None:
         """Add or update a skill score."""
         # Remove existing score for the same skill
-        self.skill_scores = [
-            s for s in self.skill_scores if s.skill_name != score.skill_name
-        ]
+        self.skill_scores = [s for s in self.skill_scores if s.skill_name != score.skill_name]
         self.skill_scores.append(score)
         self.updated_at = datetime.now()
 
     def add_domain_aptitude(self, aptitude: DomainAptitude) -> None:
         """Add or update a domain aptitude."""
         # Remove existing aptitude for the same domain
-        self.domain_aptitudes = [
-            a for a in self.domain_aptitudes if a.domain != aptitude.domain
-        ]
+        self.domain_aptitudes = [a for a in self.domain_aptitudes if a.domain != aptitude.domain]
         self.domain_aptitudes.append(aptitude)
         self.updated_at = datetime.now()
 
@@ -95,4 +91,3 @@ class Learner:
     def get_strong_skills(self) -> list[SkillScore]:
         """Get skills that are proficient."""
         return [s for s in self.skill_scores if s.is_proficient()]
-

@@ -17,9 +17,7 @@ class LLMService(LLMServiceInterface):
     def __init__(self):
         self.llm = get_llm()
 
-    async def generate_initial_message(
-        self, session: DiagnosisSession
-    ) -> str:
+    async def generate_initial_message(self, session: DiagnosisSession) -> str:
         """Generate the initial message for a diagnosis session."""
         system_prompt = self._get_system_prompt(session.current_phase)
 
@@ -45,6 +43,7 @@ class LLMService(LLMServiceInterface):
                 messages.append(HumanMessage(content=msg.content))
             else:
                 from langchain_core.messages import AIMessage
+
                 messages.append(AIMessage(content=msg.content))
 
         # Add the new user message
@@ -58,16 +57,12 @@ class LLMService(LLMServiceInterface):
 
         return response_text, should_advance
 
-    async def get_phase_result(
-        self, session: DiagnosisSession
-    ) -> Optional[dict[str, Any]]:
+    async def get_phase_result(self, session: DiagnosisSession) -> Optional[dict[str, Any]]:
         """Get the result of the current phase."""
         # Build analysis prompt
         analysis_prompt = self._get_analysis_prompt(session.current_phase)
 
-        conversation_text = "\n".join(
-            f"{msg.role}: {msg.content}" for msg in session.messages
-        )
+        conversation_text = "\n".join(f"{msg.role}: {msg.content}" for msg in session.messages)
 
         messages = [
             SystemMessage(content=analysis_prompt),
@@ -149,8 +144,7 @@ class LLMService(LLMServiceInterface):
         )
 
         domain_summary = "\n".join(
-            f"- {a.get('domain', 'unknown')}: {a.get('score', 0)}/10"
-            for a in domain_aptitudes
+            f"- {a.get('domain', 'unknown')}: {a.get('score', 0)}/10" for a in domain_aptitudes
         )
 
         messages = [
@@ -263,9 +257,7 @@ JSON形式でロードマップを返してください。"""
     "summary": "全体的なまとめ"
 }}"""
 
-    def _should_advance_phase(
-        self, response: str, session: DiagnosisSession
-    ) -> bool:
+    def _should_advance_phase(self, response: str, session: DiagnosisSession) -> bool:
         """Check if the phase should advance based on the response."""
         completion_phrases = [
             "診断が完了しました",
@@ -275,4 +267,3 @@ JSON形式でロードマップを返してください。"""
             "次に進みましょう",
         ]
         return any(phrase in response for phrase in completion_phrases)
-

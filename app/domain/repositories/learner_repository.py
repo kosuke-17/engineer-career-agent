@@ -66,4 +66,3 @@ class LearnerRepository(ABC):
             List of Learner entities.
         """
         pass
-

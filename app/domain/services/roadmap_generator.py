@@ -4,10 +4,10 @@ from typing import Any
 
 from ..entities import (
     Learner,
-    LearningRoadmap,
-    QuarterPlan,
-    Milestone,
     LearningResource,
+    LearningRoadmap,
+    Milestone,
+    QuarterPlan,
 )
 from ..value_objects import EngineeringDomain
 
@@ -216,4 +216,3 @@ class RoadmapGeneratorService:
         roadmap.notes = result.get("notes")
 
         return roadmap
-

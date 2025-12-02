@@ -65,24 +65,17 @@ class SkillAssessmentService:
         """
         # Skill to domain mapping weights
         domain_skills = {
-            EngineeringDomain.FRONTEND: [
-                "javascript", "typescript", "css", "html", "react", "vue"
-            ],
-            EngineeringDomain.BACKEND: [
-                "python", "java", "database", "api_design", "sql"
-            ],
-            EngineeringDomain.DEVOPS: [
-                "linux", "docker", "kubernetes", "ci_cd", "cloud"
-            ],
+            EngineeringDomain.FRONTEND: ["javascript", "typescript", "css", "html", "react", "vue"],
+            EngineeringDomain.BACKEND: ["python", "java", "database", "api_design", "sql"],
+            EngineeringDomain.DEVOPS: ["linux", "docker", "kubernetes", "ci_cd", "cloud"],
             EngineeringDomain.ML_ENGINEERING: [
-                "python", "machine_learning", "statistics", "data_processing"
+                "python",
+                "machine_learning",
+                "statistics",
+                "data_processing",
             ],
-            EngineeringDomain.MOBILE: [
-                "swift", "kotlin", "react_native", "flutter"
-            ],
-            EngineeringDomain.SYSTEMS: [
-                "c", "rust", "operating_systems", "networking"
-            ],
+            EngineeringDomain.MOBILE: ["swift", "kotlin", "react_native", "flutter"],
+            EngineeringDomain.SYSTEMS: ["c", "rust", "operating_systems", "networking"],
         }
 
         aptitudes = []
@@ -98,18 +91,14 @@ class SkillAssessmentService:
             else:
                 avg_score = 0.0
 
-            aptitudes.append(
-                DomainAptitude(domain=domain, score=avg_score)
-            )
+            aptitudes.append(DomainAptitude(domain=domain, score=avg_score))
 
         # Sort by score descending
         aptitudes.sort(key=lambda x: x.score, reverse=True)
         return aptitudes
 
     @staticmethod
-    def parse_assessment_result(
-        result: dict[str, Any]
-    ) -> list[SkillScore]:
+    def parse_assessment_result(result: dict[str, Any]) -> list[SkillScore]:
         """Parse assessment result from LLM into skill scores.
 
         Args:
@@ -140,4 +129,3 @@ class SkillAssessmentService:
                     continue
 
         return skill_scores
-

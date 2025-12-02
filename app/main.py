@@ -1,6 +1,5 @@
 """Application entry point - imports from DDD presentation layer."""
 
-# Re-export from the DDD presentation layer for backward compatibility
 from app.presentation.main import app, create_app
 
 __all__ = ["app", "create_app"]

@@ -34,9 +34,7 @@ class RoadmapRepository(ABC):
         pass
 
     @abstractmethod
-    async def find_latest_by_user_id(
-        self, user_id: str
-    ) -> Optional[LearningRoadmap]:
+    async def find_latest_by_user_id(self, user_id: str) -> Optional[LearningRoadmap]:
         """Find the latest roadmap for a user.
 
         Args:
@@ -67,4 +65,3 @@ class RoadmapRepository(ABC):
             True if the roadmap was deleted, False if not found.
         """
         pass
-

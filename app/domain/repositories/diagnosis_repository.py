@@ -34,9 +34,7 @@ class DiagnosisRepository(ABC):
         pass
 
     @abstractmethod
-    async def find_active_by_user_id(
-        self, user_id: str
-    ) -> Optional[DiagnosisSession]:
+    async def find_active_by_user_id(self, user_id: str) -> Optional[DiagnosisSession]:
         """Find the active (incomplete) diagnosis session for a user.
 
         Args:
@@ -79,4 +77,3 @@ class DiagnosisRepository(ABC):
             True if the session exists, False otherwise.
         """
         pass
-

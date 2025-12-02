@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Optional
 
 from app.domain.entities import (
-    LearningRoadmap,
     LearningResource,
+    LearningRoadmap,
     Milestone,
     QuarterPlan,
 )
@@ -58,9 +58,7 @@ class FileRoadmapRepository(RoadmapRepository):
                 continue
         return roadmaps
 
-    async def find_latest_by_user_id(
-        self, user_id: str
-    ) -> Optional[LearningRoadmap]:
+    async def find_latest_by_user_id(self, user_id: str) -> Optional[LearningRoadmap]:
         """Find the latest roadmap for a user."""
         roadmaps = await self.find_by_user_id(user_id)
         if not roadmaps:
@@ -199,4 +197,3 @@ class FileRoadmapRepository(RoadmapRepository):
             created_at=created_at,
             updated_at=updated_at,
         )
-

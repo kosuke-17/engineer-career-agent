@@ -53,9 +53,7 @@ class FileDiagnosisRepository(DiagnosisRepository):
                 continue
         return sessions
 
-    async def find_active_by_user_id(
-        self, user_id: str
-    ) -> Optional[DiagnosisSession]:
+    async def find_active_by_user_id(self, user_id: str) -> Optional[DiagnosisSession]:
         """Find the active (incomplete) diagnosis session for a user."""
         sessions = await self.find_by_user_id(user_id)
         for session in sessions:
@@ -190,4 +188,3 @@ class FileDiagnosisRepository(DiagnosisRepository):
             updated_at=updated_at,
         )
         return session
-

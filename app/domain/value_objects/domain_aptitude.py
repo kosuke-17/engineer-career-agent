@@ -51,4 +51,3 @@ class DomainAptitude:
     def is_suitable(self) -> bool:
         """Check if this domain is suitable (score >= 5)."""
         return self.score >= 5
-
