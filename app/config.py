@@ -46,6 +46,7 @@ class LLMProvider(str, Enum):
     """Supported LLM providers."""
 
     ANTHROPIC = "anthropic"
+    OPENAI = "openai"
     OLLAMA = "ollama"
 
 
@@ -66,6 +67,15 @@ class Settings(BaseSettings):
     # === Anthropic API Configuration ===
     # 環境変数: ANTHROPIC_API_KEY
     anthropic_api_key: str = Field(default="", description="Anthropic API Key")
+
+    # === OpenAI API Configuration ===
+    # 環境変数: OPENAI_API_KEY
+    openai_api_key: str = Field(default="", description="OpenAI API Key")
+    # 環境変数: OPENAI_MODEL
+    openai_model: str = Field(
+        default="gpt-4o-mini",
+        description="OpenAI model to use (e.g., gpt-4o, gpt-4o-mini, gpt-4-turbo)",
+    )
 
     # === Ollama Configuration ===
     # 環境変数: OLLAMA_BASE_URL
@@ -102,8 +112,8 @@ class Settings(BaseSettings):
     sessions_dir: Path = Field(default=Path("./data/sessions"), description="Session data storage")
 
     # === LLM Settings (for Anthropic) ===
-    # 環境変数: DEFAULT_MODEL
-    default_model: str = Field(
+    # 環境変数: ANTHROPIC_MODEL
+    anthropic_model: str = Field(
         default="claude-sonnet-4-5-20250929", description="Default Anthropic model"
     )
     # 環境変数: MAX_TOKENS

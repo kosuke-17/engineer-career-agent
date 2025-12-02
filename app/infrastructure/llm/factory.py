@@ -37,6 +37,8 @@ class LLMFactory:
 
         if provider == LLMProvider.ANTHROPIC:
             return self._create_anthropic_model(model, temp, tokens)
+        elif provider == LLMProvider.OPENAI:
+            return self._create_openai_model(model, temp, tokens)
         elif provider == LLMProvider.OLLAMA:
             return self._create_ollama_model(model, temp, tokens)
         else:
@@ -51,11 +53,29 @@ class LLMFactory:
         """Create an Anthropic chat model."""
         from langchain_anthropic import ChatAnthropic
 
-        model_name = model or self.settings.default_model
+        model_name = model or self.settings.anthropic_model
 
         return ChatAnthropic(
             model=model_name,
             api_key=self.settings.anthropic_api_key,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+
+    def _create_openai_model(
+        self,
+        model: Optional[str],
+        temperature: float,
+        max_tokens: int,
+    ) -> BaseChatModel:
+        """Create an OpenAI chat model."""
+        from langchain_openai import ChatOpenAI
+
+        model_name = model or self.settings.openai_model
+
+        return ChatOpenAI(
+            model=model_name,
+            api_key=self.settings.openai_api_key,
             temperature=temperature,
             max_tokens=max_tokens,
         )
@@ -81,7 +101,9 @@ class LLMFactory:
     def get_model_name(self) -> str:
         """Get the current model name based on provider."""
         if self.settings.llm_provider == LLMProvider.ANTHROPIC:
-            return self.settings.default_model
+            return self.settings.anthropic_model
+        elif self.settings.llm_provider == LLMProvider.OPENAI:
+            return self.settings.openai_model
         elif self.settings.llm_provider == LLMProvider.OLLAMA:
             return self.settings.ollama_model
         else:
@@ -94,8 +116,14 @@ class LLMFactory:
         if provider == LLMProvider.ANTHROPIC:
             return {
                 "provider": "anthropic",
-                "model": self.settings.default_model,
+                "model": self.settings.anthropic_model,
                 "api_key_set": bool(self.settings.anthropic_api_key),
+            }
+        elif provider == LLMProvider.OPENAI:
+            return {
+                "provider": "openai",
+                "model": self.settings.openai_model,
+                "api_key_set": bool(self.settings.openai_api_key),
             }
         elif provider == LLMProvider.OLLAMA:
             return {

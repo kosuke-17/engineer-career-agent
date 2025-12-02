@@ -62,7 +62,7 @@ cp .env.example .env
 ```env
 LLM_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your-api-key-here
-DEFAULT_MODEL=claude-sonnet-4-5-20250929
+ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
 ```
 
 #### Ollama（ローカルLLM）を使用する場合

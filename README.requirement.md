@@ -283,7 +283,7 @@ technical_subagent = {
 }
 
 subagent_middleware = SubAgentMiddleware(
-    default_model="claude-sonnet-4-5-20250929",
+    anthropic_model="claude-sonnet-4-5-20250929",
     default_tools=[],
     subagents=[
         foundation_subagent,
