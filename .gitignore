@@ -34,6 +34,11 @@ htmlcov/
 .tox/
 .nox/
 
+# AWS SAM
+.aws-sam/
+samconfig.toml
+template.yaml
+
 # Data directories (keep structure, ignore content)
 data/memories/*
 data/sessions/*

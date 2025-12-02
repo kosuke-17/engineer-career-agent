@@ -422,6 +422,76 @@
 
 ---
 
+## Phase 12: AWS SAM Lambda デプロイ設定 ✅
+
+### 実装日: 2025年12月2日
+
+### 背景
+- FastAPI アプリケーションを AWS Lambda にデプロイ
+- AWS SAM (Serverless Application Model) を使用
+
+### 実施内容
+
+1. **handler.py の修正**
+   - インポートパスを修正 (`app.presentation.main`)
+   - Mangum で `lifespan="off"` を設定（Lambda では不要）
+
+2. **requirements.txt の作成**
+   - SAM ビルド用の依存関係ファイル
+   - uvicorn は Lambda では不要なため除外
+
+3. **template.yaml の強化**
+   - パラメータ追加: `Environment`, `LLMProvider`
+   - メモリ: 1024MB（LLM呼び出し用に大きめ）
+   - タイムアウト: 60秒
+   - 環境変数設定: DATA_DIR, MEMORIES_DIR, SESSIONS_DIR を /tmp 配下に
+   - API Gateway エンドポイント設定
+
+4. **samconfig.toml の作成**
+   - default, staging, production 環境設定
+   - ビルドキャッシュ有効化
+   - パラメータオーバーライド設定
+
+5. **.gitignore の更新**
+   - `.aws-sam/` ディレクトリを追加
+   - `samconfig.toml` を追加（認証情報が含まれる可能性）
+
+### デプロイ手順
+
+```bash
+# 1. SAM CLI インストール（未インストールの場合）
+brew install aws-sam-cli
+
+# 2. AWS 認証情報の設定
+aws configure
+
+# 3. 環境変数の設定（API Key等）
+# AWS Systems Manager Parameter Store に設定するか、
+# template.yaml の Environment Variables を直接編集
+
+# 4. ビルド
+sam build
+
+# 5. ローカルテスト
+sam local start-api
+
+# 6. デプロイ（開発環境）
+sam deploy
+
+# 7. デプロイ（ステージング環境）
+sam deploy --config-env staging
+
+# 8. デプロイ（本番環境）
+sam deploy --config-env production
+```
+
+### 注意事項
+- Lambda では `/tmp` ディレクトリのみ書き込み可能（最大512MB）
+- LLM API Key は Parameter Store または Secrets Manager で管理推奨
+- コールドスタート時間を考慮（依存関係が多いため）
+
+---
+
 ## 今後の拡張案
 
 1. **認証システム**
