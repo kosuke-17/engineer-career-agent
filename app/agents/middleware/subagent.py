@@ -3,8 +3,9 @@
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
+
+from app.llm import get_llm
 
 
 @dataclass
@@ -15,19 +16,13 @@ class SubAgentConfig:
     description: str
     system_prompt: str
     tools: list = field(default_factory=list)
-    model: str = "claude-sonnet-4-5-20250929"
+    model: Optional[str] = None  # None means use default from factory
 
 
 class SubAgentMiddleware:
     """Middleware for managing and delegating to specialized sub-agents."""
 
-    def __init__(
-        self,
-        default_model: str = "claude-sonnet-4-5-20250929",
-        api_key: Optional[str] = None,
-    ):
-        self.default_model = default_model
-        self.api_key = api_key
+    def __init__(self):
         self.subagents: dict[str, SubAgentConfig] = {}
         self._register_default_subagents()
 
@@ -155,10 +150,7 @@ class SubAgentMiddleware:
         config = self.subagents[subagent_name]
 
         try:
-            llm = ChatAnthropic(
-                model=config.model,
-                api_key=self.api_key,
-            )
+            llm = get_llm(model=config.model)
 
             messages = [
                 SystemMessage(content=config.system_prompt),

@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from langchain_anthropic import ChatAnthropic
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from app.agents.middleware.filesystem import FilesystemMiddleware
@@ -15,6 +15,7 @@ from app.agents.subagents.domain import DomainMatcherAgent
 from app.agents.subagents.foundation import FoundationAssessorAgent
 from app.agents.subagents.technical import TechnicalAnalyzerAgent
 from app.config import get_settings
+from app.llm import get_llm
 from app.models.diagnosis import (
     DiagnosisPhase,
     DiagnosisSession,
@@ -65,11 +66,10 @@ class LearningPathAgent:
     def __init__(
         self,
         model: Optional[str] = None,
-        api_key: Optional[str] = None,
     ):
         settings = get_settings()
-        self.model = model or settings.default_model
-        self.api_key = api_key or settings.anthropic_api_key
+        self.model = model
+        self.settings = settings
 
         # Initialize storage
         self.file_backend = FileBackend(
@@ -79,37 +79,21 @@ class LearningPathAgent:
 
         # Initialize middleware
         self.filesystem_middleware = FilesystemMiddleware(self.file_backend)
-        self.subagent_middleware = SubAgentMiddleware(
-            default_model=self.model,
-            api_key=self.api_key,
-        )
+        self.subagent_middleware = SubAgentMiddleware()
 
-        # Initialize sub-agents
-        self.foundation_agent = FoundationAssessorAgent(
-            model=self.model,
-            api_key=self.api_key,
-        )
-        self.domain_agent = DomainMatcherAgent(
-            model=self.model,
-            api_key=self.api_key,
-        )
-        self.technical_agent = TechnicalAnalyzerAgent(
-            model=self.model,
-            api_key=self.api_key,
-        )
+        # Initialize sub-agents (they will use the LLM factory internally)
+        self.foundation_agent = FoundationAssessorAgent(model=self.model)
+        self.domain_agent = DomainMatcherAgent(model=self.model)
+        self.technical_agent = TechnicalAnalyzerAgent(model=self.model)
 
         # Session management
         self.sessions: dict[str, DiagnosisSession] = {}
         self.todo_middlewares: dict[str, TodoListMiddleware] = {}
         self.assessment_data: dict[str, dict] = {}
 
-    def _get_llm(self) -> ChatAnthropic:
-        """Get LLM instance."""
-        return ChatAnthropic(
-            model=self.model,
-            api_key=self.api_key,
-            max_tokens=4096,
-        )
+    def _get_llm(self) -> BaseChatModel:
+        """Get LLM instance using the factory."""
+        return get_llm(model=self.model, max_tokens=4096)
 
     async def start_session(
         self,
@@ -185,6 +169,7 @@ class LearningPathAgent:
 
         messages.append(HumanMessage(content=intro_prompt))
 
+        # ainvokeは非同期の呼び出しメソッド
         response = await llm.ainvoke(messages)
         response_text = response.content
 

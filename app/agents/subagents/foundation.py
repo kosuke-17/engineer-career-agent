@@ -3,9 +3,10 @@
 import json
 from typing import Optional
 
-from langchain_anthropic import ChatAnthropic
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
+from app.llm import get_llm
 from app.tools.assessment import assess_foundation_skills
 
 
@@ -47,11 +48,9 @@ class FoundationAssessorAgent:
 
     def __init__(
         self,
-        model: str = "claude-sonnet-4-5-20250929",
-        api_key: Optional[str] = None,
+        model: Optional[str] = None,
     ):
         self.model = model
-        self.api_key = api_key
         self.conversation_history: list = []
         self.assessment_data: dict = {
             "programming": None,
@@ -59,12 +58,9 @@ class FoundationAssessorAgent:
             "data_structures": None,
         }
 
-    def _get_llm(self) -> ChatAnthropic:
-        """Get LLM instance."""
-        return ChatAnthropic(
-            model=self.model,
-            api_key=self.api_key,
-        )
+    def _get_llm(self) -> BaseChatModel:
+        """Get LLM instance using the factory."""
+        return get_llm(model=self.model)
 
     async def start_assessment(self) -> str:
         """Start the foundation assessment."""

@@ -1,7 +1,6 @@
 """Roadmap generation tool for Learning Path Agent."""
 
 import json
-from typing import Optional
 from datetime import datetime
 
 from langchain_core.tools import tool

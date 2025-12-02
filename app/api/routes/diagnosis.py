@@ -24,10 +24,7 @@ def get_agent(settings: Settings = Depends(get_settings)) -> LearningPathAgent:
     """Get or create the learning path agent."""
     global _agent
     if _agent is None:
-        _agent = LearningPathAgent(
-            model=settings.default_model,
-            api_key=settings.anthropic_api_key,
-        )
+        _agent = LearningPathAgent()
     return _agent
 
 

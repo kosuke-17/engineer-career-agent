@@ -26,7 +26,7 @@ AIを活用したエンジニア向け学習パス自動カスタマイズサー
 - **言語**: Python 3.12+
 - **パッケージ管理**: uv
 - **フレームワーク**: FastAPI + Uvicorn
-- **LLM**: LangChain + Anthropic Claude
+- **LLM**: LangChain + Anthropic Claude / Ollama（切り替え可能）
 - **データ検証**: Pydantic v2
 - **ストレージ**: ファイルシステム (JSON/Markdown)
 
@@ -36,7 +36,7 @@ AIを活用したエンジニア向け学習パス自動カスタマイズサー
 
 - Python 3.12以上
 - uv (パッケージマネージャー)
-- Anthropic API Key
+- Anthropic API Key または Ollama
 
 ### インストール
 
@@ -57,16 +57,44 @@ cp .env.example .env
 
 `.env`ファイルに以下の環境変数を設定してください：
 
-```env
-# 必須
-ANTHROPIC_API_KEY=your-api-key-here
+#### Anthropicを使用する場合
 
-# オプション
+```env
+LLM_PROVIDER=anthropic
+ANTHROPIC_API_KEY=your-api-key-here
+DEFAULT_MODEL=claude-sonnet-4-5-20250929
+```
+
+#### Ollama（ローカルLLM）を使用する場合
+
+```env
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3
+```
+
+#### 共通オプション
+
+```env
 APP_ENV=development
 DEBUG=true
 HOST=0.0.0.0
 PORT=8000
-DEFAULT_MODEL=claude-sonnet-4-5-20250929
+```
+
+### Ollamaのセットアップ
+
+ローカルLLMを使用する場合は、事前にOllamaをインストールしてモデルをダウンロードしてください：
+
+```bash
+# Ollamaのインストール（macOS）
+brew install ollama
+
+# Ollamaサーバーの起動
+ollama serve
+
+# モデルのダウンロード（別ターミナルで）
+ollama pull llama3
 ```
 
 ## 起動方法

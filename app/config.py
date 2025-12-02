@@ -1,5 +1,6 @@
 """Configuration management for Learning Path Agent."""
 
+from enum import Enum
 from functools import lru_cache
 from pathlib import Path
 
@@ -7,11 +8,34 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
+class LLMProvider(str, Enum):
+    """Supported LLM providers."""
+
+    ANTHROPIC = "anthropic"
+    OLLAMA = "ollama"
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
+    # LLM Provider Settings
+    llm_provider: LLMProvider = Field(
+        default=LLMProvider.ANTHROPIC,
+        description="LLM provider to use (anthropic or ollama)",
+    )
+
     # Anthropic API Configuration
     anthropic_api_key: str = Field(default="", description="Anthropic API Key")
+
+    # Ollama Configuration
+    ollama_base_url: str = Field(
+        default="http://localhost:11434",
+        description="Ollama server base URL",
+    )
+    ollama_model: str = Field(
+        default="gpt-oss:20b",
+        description="Ollama model to use",
+    )
 
     # Application Settings
     app_env: str = Field(default="development", description="Application environment")
@@ -28,9 +52,9 @@ class Settings(BaseSettings):
     )
     sessions_dir: Path = Field(default=Path("./data/sessions"), description="Session data storage")
 
-    # LLM Settings
+    # LLM Settings (for Anthropic)
     default_model: str = Field(
-        default="claude-sonnet-4-5-20250929", description="Default LLM model"
+        default="claude-sonnet-4-5-20250929", description="Default Anthropic model"
     )
     max_tokens: int = Field(default=4096, description="Maximum tokens for LLM response")
     temperature: float = Field(default=0.7, description="LLM temperature")
