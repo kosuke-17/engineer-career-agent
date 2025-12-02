@@ -15,9 +15,7 @@ class LLMServiceInterface(ABC):
     """
 
     @abstractmethod
-    async def generate_initial_response(
-        self, session: DiagnosisSession
-    ) -> StructuredResponse:
+    async def generate_initial_response(self, session: DiagnosisSession) -> StructuredResponse:
         """Generate the initial response for a diagnosis session.
 
         Args:
@@ -45,9 +43,7 @@ class LLMServiceInterface(ABC):
         pass
 
     @abstractmethod
-    async def get_phase_result(
-        self, session: DiagnosisSession
-    ) -> Optional[dict[str, Any]]:
+    async def get_phase_result(self, session: DiagnosisSession) -> Optional[dict[str, Any]]:
         """Get the result of the current phase.
 
         Args:
@@ -74,5 +70,30 @@ class LLMServiceInterface(ABC):
 
         Returns:
             A dictionary containing the roadmap data.
+        """
+        pass
+
+    @abstractmethod
+    async def generate_structured_roadmap(
+        self,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Generate a learning roadmap from structured diagnosis context.
+
+        Args:
+            context: The diagnosis context containing:
+                - domain: Selected domain (frontend/backend/infrastructure)
+                - goal: Selected goal with id and label
+                - common_answers: List of common question answers
+                - domain_answers: List of domain-specific question answers
+
+        Returns:
+            A dictionary containing the structured roadmap with:
+                - goal: The learning goal
+                - domain: The selected domain
+                - duration_months: Total duration
+                - phases: List of learning phases
+                - milestones: Key milestones
+                - final_project: Suggested final project
         """
         pass

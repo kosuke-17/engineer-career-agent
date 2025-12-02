@@ -65,20 +65,24 @@ class GetDiagnosisResultUseCase:
             if learner:
                 # Merge stored skill scores
                 for score in learner.skill_scores:
-                    skill_scores.append({
-                        "name": score.skill_name,
-                        "score": score.score,
-                        "level": score.level.value,
-                        "notes": score.notes,
-                    })
+                    skill_scores.append(
+                        {
+                            "name": score.skill_name,
+                            "score": score.score,
+                            "level": score.level.value,
+                            "notes": score.notes,
+                        }
+                    )
 
                 # Merge stored domain aptitudes
                 for aptitude in learner.domain_aptitudes:
-                    domain_aptitudes.append({
-                        "domain": aptitude.domain.value,
-                        "score": aptitude.score,
-                        "reasoning": aptitude.reasoning,
-                    })
+                    domain_aptitudes.append(
+                        {
+                            "domain": aptitude.domain.value,
+                            "score": aptitude.score,
+                            "reasoning": aptitude.reasoning,
+                        }
+                    )
 
         return DiagnosisResultResponse(
             session_id=session.id,
@@ -89,4 +93,3 @@ class GetDiagnosisResultUseCase:
             roadmap=roadmap,
             summary=summary,
         )
-

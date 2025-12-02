@@ -3,6 +3,11 @@
 from .learner import Learner, LearnerProfile
 from .diagnosis import DiagnosisSession, DiagnosisPhase, PhaseInfo, Message
 from .roadmap import LearningRoadmap, QuarterPlan, Milestone, LearningResource
+from .structured_diagnosis import (
+    StructuredDiagnosisSession,
+    StructuredDiagnosisPhase,
+    QuestionAnswer,
+)
 
 __all__ = [
     "Learner",
@@ -15,5 +20,8 @@ __all__ = [
     "QuarterPlan",
     "Milestone",
     "LearningResource",
+    "StructuredDiagnosisSession",
+    "StructuredDiagnosisPhase",
+    "QuestionAnswer",
 ]
 

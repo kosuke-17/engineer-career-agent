@@ -254,6 +254,117 @@
 
 ---
 
+## Phase 10: V2診断API - 定数管理質問とロードマップ生成 ✅
+
+### 実装日: 2025年12月2日
+
+### 背景
+- 診断質問をAIの動的生成ではなく、定数で管理したい要望
+- フロントエンド・バックエンド・インフラの3領域から1つを選択して深掘り
+- ゴールを定数一覧から選択（例：転職先でXXX領域で活躍するため）
+- 全コンテキストを元にAIがJSON構造化ロードマップを生成
+
+### 設計方針
+- 新規API作成 (`/api/v2/diagnosis`) - 既存APIと並行運用可能
+- 既存の5フェーズ構造とは異なる新フロー
+
+### 新しい診断フロー
+```
+1. 領域選択 → 2. ゴール選択 → 3. 共通質問 → 4. 領域別質問 → 5. ロードマップ生成(AI)
+```
+
+### 実施内容
+
+1. **定数定義** (`app/domain/constants/diagnosis_questions.py`)
+   - `Domain` - 3領域の定義（frontend/backend/infrastructure）
+   - `DOMAINS` - 領域選択用データ
+   - `GOALS` - 領域ごとのゴール一覧（計12個）
+   - `COMMON_QUESTIONS` - 共通質問6問（経験年数、学習時間、スタイル等）
+   - `DOMAIN_QUESTIONS` - 領域別深掘り質問
+     - フロントエンド: 8問（HTML/CSS、JS、TS、フレームワーク等）
+     - バックエンド: 9問（言語、フレームワーク、DB、API設計等）
+     - インフラ: 9問（クラウド、コンテナ、IaC、CI/CD等）
+
+2. **エンティティ** (`app/domain/entities/structured_diagnosis.py`)
+   - `StructuredDiagnosisPhase` - 6フェーズ定義
+   - `QuestionAnswer` - 質問・回答ペア
+   - `StructuredDiagnosisSession` - セッションエンティティ
+     - 領域・ゴール・回答の保持
+     - ロードマップの保持
+     - 進捗計算
+
+3. **リポジトリ**
+   - `StructuredDiagnosisRepository` - インターフェース
+   - `FileStructuredDiagnosisRepository` - ファイル永続化実装
+
+4. **ユースケース** (`app/application/use_cases/v2_diagnosis/`)
+   - `StartV2DiagnosisUseCase` - セッション開始、領域選択肢返却
+   - `SelectDomainUseCase` - 領域選択、ゴール選択肢返却
+   - `SelectGoalUseCase` - ゴール選択、共通質問返却
+   - `SubmitAnswersUseCase` - 回答処理、次質問 or ロードマップ生成
+   - `GetRoadmapUseCase` - ロードマップ取得
+
+5. **APIルーター** (`app/presentation/api/routes/v2_diagnosis_router.py`)
+   | エンドポイント | 説明 |
+   |---|---|
+   | `POST /api/v2/diagnosis/start` | セッション開始、領域選択肢を返す |
+   | `POST /api/v2/diagnosis/{id}/domain` | 領域選択 → ゴール選択肢を返す |
+   | `POST /api/v2/diagnosis/{id}/goal` | ゴール選択 → 共通質問を返す |
+   | `POST /api/v2/diagnosis/{id}/answers` | 質問回答 → 次の質問 or ロードマップ |
+   | `GET /api/v2/diagnosis/{id}/roadmap` | 生成されたロードマップを取得 |
+
+6. **LLMService拡張** (`app/infrastructure/llm/llm_service.py`)
+   - `generate_structured_roadmap` メソッド追加
+   - 入力: 領域、ゴール、全質問・回答コンテキスト
+   - 出力: JSON構造化ロードマップ（フェーズ、マイルストーン、最終プロジェクト等）
+
+### 生成されるロードマップ構造
+```json
+{
+  "goal": "学習のゴール",
+  "domain": "専門領域",
+  "duration_months": 6,
+  "weekly_hours_recommended": 10,
+  "phases": [
+    {
+      "phase": 1,
+      "title": "フェーズ名",
+      "duration_weeks": 4,
+      "topics": [...],
+      "hands_on_project": {...}
+    }
+  ],
+  "milestones": [...],
+  "final_project": {...},
+  "career_advice": "アドバイス",
+  "next_steps": [...]
+}
+```
+
+### 変更ファイル一覧
+- 新規: `app/domain/constants/__init__.py`
+- 新規: `app/domain/constants/diagnosis_questions.py`
+- 新規: `app/domain/entities/structured_diagnosis.py`
+- 新規: `app/domain/repositories/structured_diagnosis_repository.py`
+- 新規: `app/infrastructure/persistence/file_structured_diagnosis_repository.py`
+- 新規: `app/application/use_cases/v2_diagnosis/__init__.py`
+- 新規: `app/application/use_cases/v2_diagnosis/start_diagnosis.py`
+- 新規: `app/application/use_cases/v2_diagnosis/select_domain.py`
+- 新規: `app/application/use_cases/v2_diagnosis/select_goal.py`
+- 新規: `app/application/use_cases/v2_diagnosis/submit_answers.py`
+- 新規: `app/application/use_cases/v2_diagnosis/get_roadmap.py`
+- 新規: `app/presentation/api/routes/v2_diagnosis_router.py`
+- 更新: `app/domain/entities/__init__.py`
+- 更新: `app/domain/repositories/__init__.py`
+- 更新: `app/infrastructure/persistence/__init__.py`
+- 更新: `app/application/use_cases/__init__.py`
+- 更新: `app/application/services/llm_service.py`
+- 更新: `app/infrastructure/llm/llm_service.py`
+- 更新: `app/presentation/api/dependencies.py`
+- 更新: `app/presentation/main.py`
+
+---
+
 ## 今後の拡張案
 
 1. **認証システム**

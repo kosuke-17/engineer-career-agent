@@ -7,7 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.presentation.api.routes import diagnosis_router, profile_router
+from app.presentation.api.routes.eng_career_diagnosis_router import (
+    router as eng_career_diagnosis_router,
+)
 
 
 @asynccontextmanager
@@ -42,9 +44,16 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # @deprecated
+    # app.include_router(diagnosis_router, prefix="/diagnosis", tags=["Diagnosis"])
+    # app.include_router(profile_router, prefix="/profile", tags=["Profile"])
+
     # Include routers
-    app.include_router(diagnosis_router, prefix="/diagnosis", tags=["Diagnosis"])
-    app.include_router(profile_router, prefix="/profile", tags=["Profile"])
+    app.include_router(
+        eng_career_diagnosis_router,
+        prefix="/api/eng-career/diagnosis",
+        tags=["Engineer Career Diagnosis"],
+    )
 
     # Health check endpoints
     @app.get("/", tags=["Health"])

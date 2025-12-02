@@ -44,4 +44,3 @@ class GetDiagnosisStatusUseCase:
             phases=phases,
             message_count=len(session.messages),
         )
-

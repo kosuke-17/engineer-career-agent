@@ -158,6 +158,146 @@ JSON形式でロードマップを返してください。"""
         result = self._parse_json_response(str(response.content))
         return result or {"error": "Failed to parse roadmap"}
 
+    async def generate_structured_roadmap(
+        self,
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Generate a learning roadmap from structured diagnosis context (V2).
+
+        Args:
+            context: The diagnosis context from StructuredDiagnosisSession.
+
+        Returns:
+            A structured roadmap dictionary.
+        """
+        # Extract context information
+        domain = context.get("domain", "")
+        goal = context.get("goal", {})
+        common_answers = context.get("common_answers", [])
+        domain_answers = context.get("domain_answers", [])
+
+        # Build the system prompt
+        system_prompt = """あなたは学習ロードマップ生成の専門家です。
+ユーザーの診断結果に基づいて、パーソナライズされた学習ロードマップをJSON形式で生成してください。
+
+以下の形式で必ずJSON形式で返してください:
+```json
+{
+    "goal": "学習のゴール（ユーザーが選択したもの）",
+    "domain": "専門領域",
+    "duration_months": 6,
+    "weekly_hours_recommended": 10,
+    "phases": [
+        {
+            "phase": 1,
+            "title": "フェーズ名",
+            "duration_weeks": 4,
+            "theme": "フェーズのテーマ",
+            "objectives": ["目標1", "目標2"],
+            "topics": [
+                {
+                    "name": "トピック名",
+                    "priority": "high/medium/low",
+                    "estimated_hours": 20,
+                    "resources": [
+                        {
+                            "title": "リソース名",
+                            "type": "course/book/tutorial/project",
+                            "url": "https://...",
+                            "language": "ja/en",
+                            "free": true
+                        }
+                    ]
+                }
+            ],
+            "hands_on_project": {
+                "title": "プロジェクト名",
+                "description": "プロジェクトの説明",
+                "skills_applied": ["スキル1", "スキル2"]
+            }
+        }
+    ],
+    "milestones": [
+        {
+            "week": 4,
+            "title": "マイルストーン名",
+            "description": "達成すべき状態",
+            "checkpoints": ["チェックポイント1", "チェックポイント2"]
+        }
+    ],
+    "prerequisites": ["前提知識1", "前提知識2"],
+    "final_project": {
+        "title": "最終プロジェクト名",
+        "description": "プロジェクトの説明",
+        "technologies": ["技術1", "技術2"],
+        "estimated_weeks": 4
+    },
+    "career_advice": "キャリアに関するアドバイス",
+    "next_steps": ["次のステップ1", "次のステップ2"]
+}
+```
+
+重要なポイント:
+- ユーザーの現在のスキルレベルに合わせて難易度を調整
+- 実践的なプロジェクトを各フェーズに含める
+- 無料のリソースを優先的に推奨
+- 日本語のリソースがある場合は優先
+- 週の学習時間に応じて期間を調整"""
+
+        # Format user context
+        domain_display = {
+            "frontend": "フロントエンド",
+            "backend": "バックエンド",
+            "infrastructure": "インフラ",
+        }.get(domain, domain)
+
+        common_summary = "\n".join(
+            f"- {a.get('question_text', '')}: {', '.join(a.get('selected_labels', []))}"
+            for a in common_answers
+        )
+
+        domain_summary = "\n".join(
+            f"- {a.get('question_text', '')}: {', '.join(a.get('selected_labels', []))}"
+            for a in domain_answers
+        )
+
+        user_content = f"""以下の診断結果に基づいて、パーソナライズされた学習ロードマップを生成してください。
+
+## 選択された領域
+{domain_display}
+
+## 学習のゴール
+{goal.get('label', '')}
+
+## 基本情報（共通質問への回答）
+{common_summary}
+
+## 専門領域の詳細（領域別質問への回答）
+{domain_summary}
+
+上記の情報を元に、このユーザーに最適な学習ロードマップをJSON形式で生成してください。"""
+
+        messages = [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=user_content),
+        ]
+
+        response = await self.llm.ainvoke(messages)
+        result = self._parse_json_response(str(response.content))
+
+        if result:
+            # Add metadata
+            result["generated_from"] = "eng_career_diagnosis"
+            result["domain"] = domain
+            result["goal"] = goal.get("label", "")
+            return result
+
+        return {
+            "error": "Failed to generate roadmap",
+            "domain": domain,
+            "goal": goal.get("label", ""),
+        }
+
     def _get_system_prompt(self, phase: Phase) -> str:
         """Get the system prompt for a phase with structured output format."""
         base_instruction = """
