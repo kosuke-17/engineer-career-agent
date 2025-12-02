@@ -36,7 +36,7 @@ class StartSessionResponse(BaseModel):
     """Response after starting a diagnosis session."""
 
     session_id: str
-    message: str
+    content: str
     current_phase: str
     phases: list[dict[str, Any]]
 
@@ -101,7 +101,7 @@ async def start_diagnosis(
 
     return StartSessionResponse(
         session_id=result.session_id,
-        message=result.message,
+        content=result.message,
         current_phase=result.current_phase,
         phases=result.phases,
     )
