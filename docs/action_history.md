@@ -365,6 +365,63 @@
 
 ---
 
+## Phase 11: Deprecated Router & 未使用コードの削除 ✅
+
+### 実装日: 2025年12月2日
+
+### 背景
+- V1診断API (`diagnosis_router`) と Profile API (`profile_router`) が deprecated
+- `eng_career_diagnosis_router` に移行完了
+- 未使用コードの整理・削除
+
+### 削除内容
+
+1. **Router ファイル**
+   - `app/presentation/api/routes/diagnosis_router.py`
+   - `app/presentation/api/routes/profile_router.py`
+
+2. **Use Cases ディレクトリ**
+   - `app/application/use_cases/diagnosis/` (ディレクトリ全体)
+   - `app/application/use_cases/profile/` (ディレクトリ全体)
+
+3. **DTO**
+   - `app/application/dto/profile_dto.py`
+
+4. **Domain / Infrastructure (Learner関連)**
+   - `app/domain/entities/learner.py`
+   - `app/domain/repositories/learner_repository.py`
+   - `app/infrastructure/persistence/file_learner_repository.py`
+
+5. **Domain / Infrastructure (Roadmap関連 - 未使用)**
+   - `app/domain/entities/roadmap.py`
+   - `app/domain/repositories/roadmap_repository.py`
+   - `app/infrastructure/persistence/file_roadmap_repository.py`
+
+### 更新内容
+
+1. **__init__.py ファイルのエクスポート整理**
+   - `app/presentation/api/routes/__init__.py`
+   - `app/application/use_cases/__init__.py`
+   - `app/application/dto/__init__.py`
+   - `app/domain/entities/__init__.py`
+   - `app/domain/repositories/__init__.py`
+   - `app/infrastructure/persistence/__init__.py`
+
+2. **dependencies.py の依存関係削除**
+   - 不要なリポジトリ・ユースケースの依存関係を削除
+   - `eng_career_diagnosis` 関連のみ残存
+
+3. **main.py**
+   - deprecated コメント行を削除
+
+### 残存ファイル（LLMService で使用）
+- `app/application/dto/diagnosis_dto.py`
+- `app/domain/entities/diagnosis.py`
+- `app/domain/repositories/diagnosis_repository.py`
+- `app/infrastructure/persistence/file_diagnosis_repository.py`
+
+---
+
 ## 今後の拡張案
 
 1. **認証システム**

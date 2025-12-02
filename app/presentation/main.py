@@ -44,10 +44,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # @deprecated
-    # app.include_router(diagnosis_router, prefix="/diagnosis", tags=["Diagnosis"])
-    # app.include_router(profile_router, prefix="/profile", tags=["Profile"])
-
     # Include routers
     app.include_router(
         eng_career_diagnosis_router,

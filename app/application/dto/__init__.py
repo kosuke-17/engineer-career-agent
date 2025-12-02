@@ -12,18 +12,11 @@ from .diagnosis_dto import (
     StartDiagnosisResponse,
     StructuredResponse,
 )
-from .profile_dto import (
-    CreateProfileRequest,
-    ProfileResponse,
-    UpdateProfileRequest,
-)
 
 __all__ = [
     "Answer",
-    "CreateProfileRequest",
     "DiagnosisResultResponse",
     "DiagnosisStatusResponse",
-    "ProfileResponse",
     "Question",
     "QuestionOption",
     "SendMessageRequest",
@@ -31,5 +24,4 @@ __all__ = [
     "StartDiagnosisRequest",
     "StartDiagnosisResponse",
     "StructuredResponse",
-    "UpdateProfileRequest",
 ]
