@@ -4,10 +4,13 @@ This use case orchestrates the LangGraph workflow for generating
 a learning roadmap based on user input.
 """
 
+import asyncio
 import json
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, AsyncIterator, Optional
 
+from app.config import get_settings
 from app.infrastructure.agents.graph import (
     stream_roadmap_workflow,
 )
@@ -71,6 +74,15 @@ class GenerateRoadmapResponse:
         }
 
 
+# Mock data file paths
+MOCK_DATA_DIR = Path(__file__).parent.parent.parent.parent / "infrastructure" / "agents"
+MOCK_FILES = [
+    "1_orchestrator.mock.json",
+    "2_research.mock.json",
+    "3_roadmap.mock.json",
+]
+
+
 class GenerateRoadmapUseCase:
     """Use case for generating a learning roadmap.
 
@@ -102,6 +114,13 @@ class GenerateRoadmapUseCase:
                 data={"error": "User request is required"},
                 is_final=True,
             )
+            return
+
+        # Check if mock mode is enabled
+        settings = get_settings()
+        if settings.agent_mock_mode:
+            async for event in self._stream_mock_data():
+                yield event
             return
 
         try:
@@ -145,6 +164,40 @@ class GenerateRoadmapUseCase:
                 event_type="error",
                 data={"error": f"Streaming error: {str(e)}"},
                 is_final=True,
+            )
+
+    async def _stream_mock_data(self) -> AsyncIterator[RoadmapProgressEvent]:
+        """Stream mock data for development/testing.
+
+        Yields:
+            RoadmapProgressEvent from mock JSON files.
+        """
+        print("learning roadmap モックAPIが実行されました")
+        for i, mock_file in enumerate(MOCK_FILES):
+            mock_path = MOCK_DATA_DIR / mock_file
+
+            if not mock_path.exists():
+                yield RoadmapProgressEvent(
+                    agent="system",
+                    event_type="error",
+                    data={"error": f"Mock file not found: {mock_file}"},
+                    is_final=True,
+                )
+                return
+
+            with open(mock_path, encoding="utf-8") as f:
+                mock_data = json.load(f)
+
+            # Simulate processing delay
+            await asyncio.sleep(0.5)
+
+            is_final = i == len(MOCK_FILES) - 1
+
+            yield RoadmapProgressEvent(
+                agent=mock_data.get("agent", "unknown"),
+                event_type=mock_data.get("type", "progress"),
+                data=mock_data.get("data", {}),
+                is_final=is_final,
             )
 
     async def stream_ndjson(

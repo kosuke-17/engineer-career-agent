@@ -1,0 +1,61 @@
+{
+  "type": "progress",
+  "agent": "research",
+  "data": {
+    "context": [
+      {
+        "name": "React",
+        "summary": "React official documentation is available on react.dev; it includes tutorials and guides for beginners and intermediates; Qiita and Zenn host additional tutorials and community-contributed content.",
+        "links": [
+          {
+            "title": "React公式ドキュメント - Learn React",
+            "url": "https://react.dev/learn"
+          },
+          {
+            "title": "React公式ドキュメント - クイックスタート",
+            "url": "https://react.dev"
+          },
+          {
+            "title": "React公式ドキュメント - インストール",
+            "url": "https://react.dev/learn/installation"
+          },
+          {
+            "title": "React公式ドキュメント - チュートリアル",
+            "url": "https://react.dev/learn/tutorial-tic-tac-toe"
+          },
+          {
+            "title": "React公式ドキュメント - リファレンス",
+            "url": "https://react.dev/reference/react"
+          }
+        ]
+      },
+      {
+        "name": "Next.js",
+        "summary": "Next.js is a React framework for building web apps; Qiita API documentation provides methods for fetching articles; Zenn and Qiita APIs are used for retrieving tech articles.",
+        "links": [
+          {
+            "title": "Next.js公式ドキュメント - はじめに",
+            "url": "https://nextjs.org/docs"
+          },
+          {
+            "title": "Next.js公式ドキュメント - インストール",
+            "url": "https://nextjs.org/docs/getting-started/installation"
+          },
+          {
+            "title": "Next.js公式ドキュメント - ルーティング",
+            "url": "https://nextjs.org/docs/app/building-your-application/routing"
+          },
+          {
+            "title": "Next.js公式ドキュメント - App Router",
+            "url": "https://nextjs.org/docs/app"
+          },
+          {
+            "title": "Next.js公式ドキュメント - API Routes",
+            "url": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers"
+          }
+        ]
+      }
+    ],
+    "error": null
+  }
+}

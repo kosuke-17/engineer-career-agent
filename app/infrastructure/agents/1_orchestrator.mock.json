@@ -1,0 +1,8 @@
+{
+  "type": "progress",
+  "agent": "orchestrator",
+  "data": {
+    "tags": ["React", "Next.js"],
+    "error": null
+  }
+}
