@@ -58,4 +58,3 @@ class SkillScore:
     def needs_improvement(self) -> bool:
         """Check if the skill needs improvement."""
         return self.level in (SkillLevel.BEGINNER, SkillLevel.INTERMEDIATE)
-

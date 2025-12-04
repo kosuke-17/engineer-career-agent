@@ -1,6 +1,5 @@
 """Phase value objects."""
 
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -70,4 +69,3 @@ class Phase(str, Enum):
     def is_final(self) -> bool:
         """Check if this is the final phase."""
         return self == Phase.ROADMAP
-

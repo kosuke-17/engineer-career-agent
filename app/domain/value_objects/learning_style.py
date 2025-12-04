@@ -23,4 +23,3 @@ class LearningStyle(str, Enum):
             LearningStyle.COMMUNITY: "コミュニティ学習",
         }
         return names.get(self, self.value)
-
