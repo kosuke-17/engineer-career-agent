@@ -4,6 +4,7 @@ This use case orchestrates the LangGraph workflow for generating
 a learning roadmap based on user input.
 """
 
+import json
 from dataclasses import dataclass, field
 from typing import Any, AsyncIterator, Optional
 
@@ -145,3 +146,31 @@ class GenerateRoadmapUseCase:
                 data={"error": f"Streaming error: {str(e)}"},
                 is_final=True,
             )
+
+    async def stream_ndjson(
+        self,
+        request: GenerateRoadmapRequest,
+    ) -> AsyncIterator[str]:
+        """Stream roadmap generation as JSON Lines (ndjson).
+
+        Args:
+            request: The generation request with user input.
+
+        Yields:
+            JSON string for each event, followed by newline.
+        """
+        try:
+            async for event in self.execute_streaming(request):
+                chunk = {
+                    "type": event.event_type,
+                    "agent": event.agent,
+                    "data": event.data,
+                }
+                yield json.dumps(chunk, ensure_ascii=False) + "\n"
+        except Exception as e:
+            error_chunk = {
+                "type": "error",
+                "agent": "system",
+                "data": {"error": str(e)},
+            }
+            yield json.dumps(error_chunk, ensure_ascii=False) + "\n"
