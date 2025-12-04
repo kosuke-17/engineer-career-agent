@@ -89,6 +89,10 @@ class Settings(BaseSettings):
         description="Ollama model to use",
     )
 
+    # === Tavily API Configuration ===
+    # 環境変数: TAVILY_API_KEY
+    tavily_api_key: str = Field(default="", description="Tavily API Key for web search")
+
     # === Application Settings ===
     # 環境変数: APP_ENV
     app_env: str = Field(default="development", description="Application environment")

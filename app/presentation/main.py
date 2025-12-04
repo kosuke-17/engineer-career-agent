@@ -10,6 +10,9 @@ from app.config import get_settings
 from app.presentation.api.routes.eng_career_diagnosis_router import (
     router as eng_career_diagnosis_router,
 )
+from app.presentation.api.routes.learning_roadmap_router import (
+    router as learning_roadmap_router,
+)
 
 
 @asynccontextmanager
@@ -49,6 +52,11 @@ def create_app() -> FastAPI:
         eng_career_diagnosis_router,
         prefix="/api/eng-career/diagnosis",
         tags=["Engineer Career Diagnosis"],
+    )
+    app.include_router(
+        learning_roadmap_router,
+        prefix="/api/learning-roadmap",
+        tags=["Learning Roadmap"],
     )
 
     # Health check endpoints

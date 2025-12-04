@@ -492,6 +492,126 @@ sam deploy --config-env production
 
 ---
 
+## Phase 13: LangGraph AIエージェントシステム実装 ✅
+
+### 実装日: 2025年12月4日
+
+### 背景
+- 要件定義 (`docs/agents_requirement.md`) に基づく3つのAIエージェント実装
+- LangGraphを使用したワークフロー構築
+- WebSocketによるリアルタイムストリーミング対応
+
+### 実施内容
+
+1. **依存関係の追加**
+   - `langgraph>=0.2.0` - LangGraphワークフローエンジン
+   - `tavily-python>=0.5.0` - Web検索API
+
+2. **設定拡張** (`app/config.py`)
+   - `TAVILY_API_KEY` 環境変数の追加
+
+3. **Domain層** (`app/domain/entities/learning_roadmap.py`)
+   - `SourceLink` - 参考リンク
+   - `TechnologyInfo` - 技術情報（名前、要約、リンク）
+   - `LearningStep` - 学習ステップ（トピック、時間、リソース）
+   - `LearningPhase` - フェーズ（基礎/応用/実践）
+   - `TechnologyRoadmap` - 技術単位のロードマップ
+   - `LearningRoadmap` - 完全なロードマップエンティティ
+
+4. **Infrastructure層 - LangGraphエージェント** (`app/infrastructure/agents/`)
+
+   | ファイル | 内容 |
+   |---------|------|
+   | `state.py` | `AgentState` TypedDict, `TechnologyContext` データクラス |
+   | `orchestrator_agent.py` | 司令塔エージェント - LLMで技術タグ抽出 |
+   | `research_agent.py` | 技術調査エージェント - Tavily APIで情報収集 |
+   | `roadmap_agent.py` | ロードマップ生成エージェント - JSON形式出力 |
+   | `graph.py` | LangGraphワークフロー構築 |
+
+5. **ワークフローフロー**
+   ```
+   START → orchestrator → research → roadmap → END
+   ```
+
+6. **Application層** (`app/application/use_cases/learning_roadmap/`)
+   - `GenerateRoadmapRequest` - リクエストDTO
+   - `GenerateRoadmapResponse` - レスポンスDTO
+   - `RoadmapProgressEvent` - ストリーミングイベント
+   - `GenerateRoadmapUseCase` - 同期/ストリーミング実行
+
+7. **Presentation層** (`app/presentation/api/routes/learning_roadmap_router.py`)
+   
+   | エンドポイント | 説明 |
+   |---------------|------|
+   | `POST /api/learning-roadmap/generate` | 同期実行（完了まで待機） |
+   | `WS /api/learning-roadmap/ws` | WebSocketストリーミング |
+
+### WebSocketメッセージフロー
+
+**クライアント → サーバー:**
+```json
+{ "type": "generate", "request": "ReactとNext.jsの学習ロードマップを作成したい" }
+```
+
+**サーバー → クライアント (各エージェント完了時):**
+```json
+// 1. 司令塔エージェント完了
+{ "type": "progress", "agent": "orchestrator", "data": { "tags": ["React", "Next.js"] } }
+
+// 2. 技術調査エージェント完了
+{ "type": "progress", "agent": "research", "data": { "context": [...] } }
+
+// 3. ロードマップ生成完了
+{ "type": "complete", "agent": "roadmap", "data": { "roadmap": {...} } }
+```
+
+### 出力JSONスキーマ
+```json
+{
+  "roadmapTitle": "技術名_学習ロードマップ",
+  "technologies": [
+    {
+      "name": "技術名",
+      "summary": "調査結果の要約",
+      "phases": [
+        {
+          "phaseName": "フェーズ名 (例: 基礎)",
+          "order": 1,
+          "steps": [
+            {
+              "topic": "学習トピック",
+              "estimatedTime": "4h",
+              "sourceLinks": [{"title": "リンク名", "url": "URL"}]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "userRequest": "元のユーザー要求",
+  "extractedTags": ["React", "Next.js"]
+}
+```
+
+### 変更ファイル一覧
+- 更新: `pyproject.toml` - 依存関係追加
+- 更新: `requirements.txt` - 依存関係追加
+- 更新: `app/config.py` - TAVILY_API_KEY追加
+- 新規: `app/domain/entities/learning_roadmap.py`
+- 更新: `app/domain/entities/__init__.py`
+- 新規: `app/infrastructure/agents/__init__.py`
+- 新規: `app/infrastructure/agents/state.py`
+- 新規: `app/infrastructure/agents/orchestrator_agent.py`
+- 新規: `app/infrastructure/agents/research_agent.py`
+- 新規: `app/infrastructure/agents/roadmap_agent.py`
+- 新規: `app/infrastructure/agents/graph.py`
+- 新規: `app/application/use_cases/learning_roadmap/__init__.py`
+- 新規: `app/application/use_cases/learning_roadmap/generate_roadmap.py`
+- 新規: `app/presentation/api/routes/learning_roadmap_router.py`
+- 更新: `app/presentation/main.py` - ルーター登録
+
+---
+
 ## 今後の拡張案
 
 1. **認証システム**
