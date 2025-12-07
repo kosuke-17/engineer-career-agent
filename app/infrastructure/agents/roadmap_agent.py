@@ -7,7 +7,7 @@ based on the technology context gathered by the research agent.
 import json
 import logging
 import re
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -119,29 +119,7 @@ async def roadmap_agent(state: AgentState) -> dict[str, Any]:
         logger.info("[Roadmap] Invoking LLM for roadmap generation")
         llm = get_llm()
 
-        context_text = _format_context(context)
-        sub_tags_text = _format_sub_tags(sub_tags, tags)
-
-        messages = [
-            SystemMessage(content=ROADMAP_GENERATION_PROMPT),
-            HumanMessage(
-                content=f"""以下の技術調査結果に基づいて、学習ロードマップを生成してください。
-
-## ユーザーの要求
-{user_input}
-
-## 対象技術
-{", ".join(tags)}
-
-## 調査結果
-{context_text}
-
-{sub_tags_text}
-
-上記の情報を元に、JSON形式でロードマップを生成してください。
-特に、サブタグ（重要キーワード）を参考にして、具体的で実践的な学習トピックを設定してください。"""
-            ),
-        ]
+        messages = _build_roadmap_messages(user_input, tags, context, sub_tags)
 
         response = await llm.ainvoke(messages)
         response_text = str(response.content)
@@ -206,6 +184,48 @@ def _format_context(context: list[dict[str, Any]]) -> str:
         )
 
     return "\n".join(parts)
+
+
+def _build_roadmap_messages(
+    user_input: str,
+    tags: list[str],
+    context: list[dict[str, Any]],
+    sub_tags: list[dict[str, Any]],
+) -> list[SystemMessage | HumanMessage]:
+    """Build messages for roadmap generation.
+
+    Args:
+        user_input: User's input text.
+        tags: List of technology tags.
+        context: List of technology context dictionaries.
+        sub_tags: List of sub_tag dictionaries.
+
+    Returns:
+        List of messages for LLM.
+    """
+    context_text = _format_context(context)
+    sub_tags_text = _format_sub_tags(sub_tags, tags)
+
+    return [
+        SystemMessage(content=ROADMAP_GENERATION_PROMPT),
+        HumanMessage(
+            content=f"""以下の技術調査結果に基づいて、学習ロードマップを生成してください。
+
+## ユーザーの要求
+{user_input}
+
+## 対象技術
+{", ".join(tags)}
+
+## 調査結果
+{context_text}
+
+{sub_tags_text}
+
+上記の情報を元に、JSON形式でロードマップを生成してください。
+特に、サブタグ（重要キーワード）を参考にして、具体的で実践的な学習トピックを設定してください。"""
+        ),
+    ]
 
 
 def _format_sub_tags(sub_tags: list[dict[str, Any]], tags: list[str]) -> str:
@@ -274,6 +294,156 @@ def _parse_roadmap_response(response_text: str) -> dict[str, Any]:
     if json_obj_match:
         try:
             return json.loads(json_obj_match.group(0))
+        except json.JSONDecodeError:
+            pass
+
+    return {}
+
+
+async def roadmap_agent_stream(state: AgentState) -> AsyncGenerator[dict[str, Any], None]:
+    """Stream roadmap generation from LLM response.
+
+    This function streams the roadmap generation process, yielding
+    partial and complete roadmap data as it becomes available.
+
+    Args:
+        state: Current agent state with context from research agent.
+
+    Yields:
+        Dictionary with streaming event data:
+        - {"type": "chunk", "content": "partial JSON string"}
+        - {"type": "progress", "roadmap": {...}, "complete": false}
+        - {"type": "complete", "roadmap": {...}, "complete": true}
+        - {"type": "error", "error": "error message"}
+    """
+    context = state.get("context", [])
+    user_input = state.get("user_input", "")
+    tags = state.get("tags", [])
+    sub_tags = state.get("sub_tags", [])
+
+    logger.info(f"[Roadmap Stream] Starting streaming roadmap generation for tags: {tags}")
+    logger.debug(f"[Roadmap Stream] Context contains {len(context)} technologies")
+    if sub_tags:
+        logger.debug(f"[Roadmap Stream] Sub_tags available: {len(sub_tags)} items")
+
+    if not context:
+        logger.warning("[Roadmap Stream] No technology context available")
+        yield {
+            "type": "error",
+            "error": state.get("error") or "No technology context available",
+        }
+        return
+
+    try:
+        logger.info("[Roadmap Stream] Invoking LLM for streaming roadmap generation")
+        llm = get_llm()
+
+        messages = _build_roadmap_messages(user_input, tags, context, sub_tags)
+
+        # Buffer to accumulate streaming chunks
+        buffer = ""
+        last_valid_json: dict[str, Any] = {}
+
+        # Stream LLM response
+        async for chunk in llm.astream(messages):
+            if hasattr(chunk, "content"):
+                content = str(chunk.content)
+                buffer += content
+
+                # Yield raw chunk for progress indication
+                yield {
+                    "type": "chunk",
+                    "content": content,
+                }
+
+                # Try to parse partial JSON from buffer
+                # Look for complete JSON objects in the buffer
+                parsed_json = _try_parse_partial_json(buffer)
+                if parsed_json and parsed_json != last_valid_json:
+                    last_valid_json = parsed_json
+                    yield {
+                        "type": "progress",
+                        "roadmap": parsed_json,
+                        "complete": False,
+                    }
+
+        # After streaming is complete, try to parse final JSON
+        logger.debug(f"[Roadmap Stream] Final buffer length: {len(buffer)} chars")
+        final_roadmap = _parse_roadmap_response(buffer)
+
+        if not final_roadmap:
+            logger.warning("[Roadmap Stream] Failed to parse final roadmap JSON")
+            yield {
+                "type": "error",
+                "error": "Failed to parse roadmap JSON from response",
+            }
+            return
+
+        tech_count = len(final_roadmap.get("technologies", []))
+        logger.info(
+            f"[Roadmap Stream] Successfully generated roadmap with {tech_count} technologies"
+        )
+
+        # Yield final complete roadmap
+        yield {
+            "type": "complete",
+            "roadmap": final_roadmap,
+            "complete": True,
+        }
+
+    except Exception as e:
+        logger.error(f"[Roadmap Stream] Error: {str(e)}", exc_info=True)
+        yield {
+            "type": "error",
+            "error": f"Roadmap agent error: {str(e)}",
+        }
+
+
+def _try_parse_partial_json(text: str) -> dict[str, Any]:
+    """Try to parse partial JSON from streaming text.
+
+    This function attempts to extract a valid JSON object from
+    potentially incomplete text by finding the last complete JSON object.
+
+    Args:
+        text: Potentially incomplete JSON text.
+
+    Returns:
+        Parsed JSON dictionary if successful, empty dict otherwise.
+    """
+    # Try to find the last complete JSON object
+    # Look for opening and closing braces
+    brace_count = 0
+    start_idx = -1
+
+    for i, char in enumerate(text):
+        if char == "{":
+            if start_idx == -1:
+                start_idx = i
+            brace_count += 1
+        elif char == "}":
+            brace_count -= 1
+            if brace_count == 0 and start_idx != -1:
+                # Found a complete JSON object
+                try:
+                    json_str = text[start_idx : i + 1]
+                    return json.loads(json_str)
+                except json.JSONDecodeError:
+                    # Continue searching
+                    pass
+
+    # If no complete object found, try parsing the entire text
+    # (might work if it's complete)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Try to extract JSON from markdown code blocks
+    json_match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", text)
+    if json_match:
+        try:
+            return json.loads(json_match.group(1))
         except json.JSONDecodeError:
             pass
 

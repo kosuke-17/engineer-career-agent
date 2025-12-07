@@ -4,14 +4,16 @@ This router provides endpoints for generating learning roadmaps
 using the LangGraph agent workflow, as well as individual agent endpoints.
 """
 
-from typing import Any, Optional
+import json
+from typing import Any, AsyncGenerator, Optional
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, field_validator
 
 from app.infrastructure.agents.orchestrator_agent import orchestrator_agent
 from app.infrastructure.agents.research_agent import research_agent
-from app.infrastructure.agents.roadmap_agent import roadmap_agent
+from app.infrastructure.agents.roadmap_agent import roadmap_agent, roadmap_agent_stream
 from app.infrastructure.agents.state import AgentState, create_initial_state
 
 router = APIRouter()
@@ -168,6 +170,35 @@ class AnalyzeResponse(BaseModel):
 
 
 # =============================================================================
+# Helper Functions
+# =============================================================================
+
+
+def _build_roadmap_state(request: RoadmapRequest) -> AgentState:
+    """Build agent state from roadmap request.
+
+    Args:
+        request: The roadmap request with user input, tags, and context.
+
+    Returns:
+        AgentState dictionary for roadmap agent.
+    """
+    # Convert SubTag models to dicts for state
+    sub_tags_dicts = [st.model_dump() for st in request.sub_tags]
+
+    return {
+        "user_input": request.user_input,
+        "tags": request.tags,
+        "sub_tags": sub_tags_dicts,
+        "context": request.context,
+        "roadmap_json": {},
+        "error": None,
+        "messages": [],
+        "current_agent": "",
+    }
+
+
+# =============================================================================
 # Individual Agent Endpoints
 # =============================================================================
 @router.post("/analyze", response_model=AnalyzeResponse)
@@ -241,19 +272,7 @@ async def generate_roadmap(request: RoadmapRequest) -> RoadmapResponse:
     Returns:
         RoadmapResponseModel with generated roadmap.
     """
-    # Convert SubTag models to dicts for state
-    sub_tags_dicts = [st.model_dump() for st in request.sub_tags]
-
-    state: AgentState = {
-        "user_input": request.user_input,
-        "tags": request.tags,
-        "sub_tags": sub_tags_dicts,
-        "context": request.context,
-        "roadmap_json": {},
-        "error": None,
-        "messages": [],
-        "current_agent": "",
-    }
+    state = _build_roadmap_state(request)
 
     result = await roadmap_agent(state)
 
@@ -267,4 +286,73 @@ async def generate_roadmap(request: RoadmapRequest) -> RoadmapResponse:
     return RoadmapResponse(
         roadmap=roadmap,
         error=result.get("error"),
+    )
+
+
+@router.post("/roadmap/stream")
+async def generate_roadmap_stream(request: RoadmapRequest) -> StreamingResponse:
+    """Stream roadmap generation in JSON Lines format.
+
+    This endpoint streams the roadmap generation process, yielding
+    partial and complete roadmap data as it becomes available.
+
+    Args:
+        request: The roadmap request with user input, tags, and context.
+
+    Returns:
+        StreamingResponse with JSON Lines (ndjson) format.
+    """
+    state = _build_roadmap_state(request)
+
+    async def stream_ndjson() -> AsyncGenerator[str, None]:
+        """Generate JSON Lines from roadmap agent stream."""
+        try:
+            # Validate state before streaming
+            if not state.get("context"):
+                error_event = {
+                    "type": "error",
+                    "error": "コンテキストが空です。先に/analyzeエンドポイントを呼び出してください。",
+                }
+                yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
+                return
+
+            if not state.get("tags"):
+                error_event = {
+                    "type": "error",
+                    "error": "タグが空です。",
+                }
+                yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
+                return
+
+            async for event in roadmap_agent_stream(state):
+                # Convert event to JSON line
+                try:
+                    json_line = json.dumps(event, ensure_ascii=False)
+                    yield f"{json_line}\n"
+                except (TypeError, ValueError) as e:
+                    # If JSON serialization fails, send error event
+                    error_event = {
+                        "type": "error",
+                        "error": f"イベントのシリアライズに失敗しました: {str(e)}",
+                    }
+                    yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
+        except Exception as e:
+            # Catch any unexpected errors during streaming
+            error_event = {
+                "type": "error",
+                "error": f"ストリーミング中にエラーが発生しました: {str(e)}",
+            }
+            try:
+                yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
+            except Exception:
+                # If even error serialization fails, send plain text
+                yield '{"type":"error","error":"ストリーミングエラー"}\n'
+
+    return StreamingResponse(
+        stream_ndjson(),
+        media_type="application/x-ndjson",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+        },
     )
