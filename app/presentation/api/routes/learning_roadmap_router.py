@@ -7,7 +7,7 @@ using the LangGraph agent workflow, as well as individual agent endpoints.
 import json
 from typing import Any, AsyncGenerator, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, field_validator
 
@@ -15,6 +15,7 @@ from app.infrastructure.agents.orchestrator_agent import orchestrator_agent
 from app.infrastructure.agents.research_agent import research_agent
 from app.infrastructure.agents.roadmap_agent import roadmap_agent, roadmap_agent_stream
 from app.infrastructure.agents.state import AgentState, create_initial_state
+from app.presentation.api.dependencies import require_session
 
 router = APIRouter()
 
@@ -202,7 +203,9 @@ def _build_roadmap_state(request: RoadmapRequest) -> AgentState:
 # Individual Agent Endpoints
 # =============================================================================
 @router.post("/analyze", response_model=AnalyzeResponse)
-async def analyze_technologies(request: AnalyzeRequest) -> AnalyzeResponse:
+async def analyze_technologies(
+    request: AnalyzeRequest, session: dict = Depends(require_session)
+) -> AnalyzeResponse:
     """Extract tags and research technologies in one call.
 
     This endpoint combines orchestrator and research agents:
@@ -260,7 +263,9 @@ async def analyze_technologies(request: AnalyzeRequest) -> AnalyzeResponse:
 
 
 @router.post("/roadmap", response_model=RoadmapResponse)
-async def generate_roadmap(request: RoadmapRequest) -> RoadmapResponse:
+async def generate_roadmap(
+    request: RoadmapRequest, session: dict = Depends(require_session)
+) -> RoadmapResponse:
     """Generate a learning roadmap from technology context.
 
     This endpoint uses the roadmap agent to generate a structured
@@ -290,7 +295,9 @@ async def generate_roadmap(request: RoadmapRequest) -> RoadmapResponse:
 
 
 @router.post("/roadmap/stream")
-async def generate_roadmap_stream(request: RoadmapRequest) -> StreamingResponse:
+async def generate_roadmap_stream(
+    request: RoadmapRequest, session: dict = Depends(require_session)
+) -> StreamingResponse:
     """Stream roadmap generation in JSON Lines format.
 
     This endpoint streams the roadmap generation process, yielding
