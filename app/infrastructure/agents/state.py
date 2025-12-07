@@ -62,6 +62,7 @@ class AgentState(TypedDict, total=False):
 
     # Orchestrator agent output
     tags: list[str]
+    sub_tags: list[dict[str, Any]]  # Sub-tags (keywords) extracted for technologies
 
     # Research agent output
     context: list[dict[str, Any]]

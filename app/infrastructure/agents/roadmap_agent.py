@@ -73,9 +73,15 @@ ROADMAP_GENERATION_PROMPT = """あなたは学習ロードマップ生成の専�
 
 3. **参考リンク**: 調査結果から提供されたリンクを活用
 
-4. **論理的な順序**: 依存関係を考慮した学習順序を設定
+4. **サブタグ（重要キーワード）の活用**:
+   - 提供されたサブタグ（技術の重要キーワード）を参考に、学習トピックを具体的に設定
+   - サブタグの`relevance_level`が高いもの（5）は基礎フェーズで必ず含める
+   - サブタグの`description`を参考に、各トピックの説明を充実させる
+   - 例：Reactのサブタグに「Component」「Hooks」「State」がある場合、これらを基礎フェーズのトピックとして含める
 
-5. **わかりやすい日本語**: 技術用語は適切に使用しつつ、説明は初学者にもわかりやすい日本語で記述
+5. **論理的な順序**: 依存関係を考慮した学習順序を設定
+
+6. **わかりやすい日本語**: 技術用語は適切に使用しつつ、説明は初学者にもわかりやすい日本語で記述
 """
 
 
@@ -94,9 +100,12 @@ async def roadmap_agent(state: AgentState) -> dict[str, Any]:
     context = state.get("context", [])
     user_input = state.get("user_input", "")
     tags = state.get("tags", [])
+    sub_tags = state.get("sub_tags", [])
 
     logger.info(f"[Roadmap] Starting roadmap generation for tags: {tags}")
     logger.debug(f"[Roadmap] Context contains {len(context)} technologies")
+    if sub_tags:
+        logger.debug(f"[Roadmap] Sub_tags available: {len(sub_tags)} items")
 
     if not context:
         logger.warning("[Roadmap] No technology context available")
@@ -110,8 +119,8 @@ async def roadmap_agent(state: AgentState) -> dict[str, Any]:
         logger.info("[Roadmap] Invoking LLM for roadmap generation")
         llm = get_llm()
 
-        # Format context for the prompt
         context_text = _format_context(context)
+        sub_tags_text = _format_sub_tags(sub_tags, tags)
 
         messages = [
             SystemMessage(content=ROADMAP_GENERATION_PROMPT),
@@ -127,7 +136,10 @@ async def roadmap_agent(state: AgentState) -> dict[str, Any]:
 ## 調査結果
 {context_text}
 
-上記の情報を元に、JSON形式でロードマップを生成してください。"""
+{sub_tags_text}
+
+上記の情報を元に、JSON形式でロードマップを生成してください。
+特に、サブタグ（重要キーワード）を参考にして、具体的で実践的な学習トピックを設定してください。"""
             ),
         ]
 
@@ -146,10 +158,6 @@ async def roadmap_agent(state: AgentState) -> dict[str, Any]:
                 "error": "Failed to parse roadmap JSON",
                 "current_agent": "roadmap",
             }
-
-        # Add metadata
-        roadmap_json["userRequest"] = user_input
-        roadmap_json["extractedTags"] = tags
 
         tech_count = len(roadmap_json.get("technologies", []))
         logger.info(f"[Roadmap] Successfully generated roadmap with {tech_count} technologies")
@@ -196,6 +204,44 @@ def _format_context(context: list[dict[str, Any]]) -> str:
 {link_text if link_text else "  - なし"}
 """
         )
+
+    return "\n".join(parts)
+
+
+def _format_sub_tags(sub_tags: list[dict[str, Any]], tags: list[str]) -> str:
+    """Format sub_tags for the prompt.
+
+    Args:
+        sub_tags: List of sub_tag dictionaries with word, description, relevance_level, technology.
+        tags: List of technology tags.
+
+    Returns:
+        Formatted string for inclusion in the prompt.
+    """
+    if not sub_tags:
+        return ""
+
+    tags_dict: dict[str, list[dict[str, Any]]] = {}
+    for sub_tag in sub_tags:
+        tech = sub_tag.get("technology", "Unknown")
+        if tech not in tags_dict:
+            tags_dict[tech] = []
+        tags_dict[tech].append(sub_tag)
+
+    parts = ["## 重要キーワード（サブタグ）"]
+
+    for tag in tags:
+        if tag in tags_dict:
+            tech_sub_tags = tags_dict[tag]
+            # Sort by relevance_level (descending)
+            tech_sub_tags.sort(key=lambda x: x.get("relevance_level", 0), reverse=True)
+
+            parts.append(f"\n### {tag}の重要キーワード")
+            for sub_tag in tech_sub_tags:
+                word = sub_tag.get("word", "")
+                description = sub_tag.get("description", "")
+                relevance = sub_tag.get("relevance_level", 0)
+                parts.append(f"- **{word}** (重要度: {relevance}/5): {description}")
 
     return "\n".join(parts)
 

@@ -7,6 +7,7 @@ It receives user input and extracts relevant technology keywords.
 import json
 import logging
 import re
+from pathlib import Path
 from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -16,6 +17,9 @@ from app.infrastructure.llm.factory import get_llm
 from .state import AgentState
 
 logger = logging.getLogger(__name__)
+
+# Path to keywords JSON files
+KEYWORDS_DIR = Path(__file__).parent
 
 # System prompt for tag extraction
 TAG_EXTRACTION_PROMPT = """あなたは技術タグ抽出の専門家です。
@@ -104,9 +108,21 @@ async def orchestrator_agent(state: AgentState) -> dict[str, Any]:
                 "current_agent": "orchestrator",
             }
 
+        # Extract sub_tags for each technology tag
+        all_sub_tags: list[dict[str, Any]] = []
+        for tag in tags:
+            sub_tags = _extract_sub_tags(tag)
+            if sub_tags:
+                all_sub_tags.extend(sub_tags)
+                logger.info(f"[Orchestrator] Extracted {len(sub_tags)} sub_tags for '{tag}'")
+
         logger.info(f"[Orchestrator] Extracted tags: {tags}")
+        if all_sub_tags:
+            logger.info(f"[Orchestrator] Total sub_tags extracted: {len(all_sub_tags)}")
+
         return {
             "tags": tags,
+            "sub_tags": all_sub_tags,
             "error": None,
             "current_agent": "orchestrator",
         }
@@ -155,3 +171,71 @@ def _parse_tags_response(response_text: str) -> list[str]:
             pass
 
     return []
+
+
+def _extract_sub_tags(technology: str) -> list[dict[str, Any]]:
+    """Extract subsub_tagstags (keywords) for a given technology.
+
+    This function looks for a JSON file named after the technology
+    (e.g., "React" -> "react.json", "Next.js" -> "nextjs.json")
+    and extracts keywords with high relevance.
+
+    Args:
+        technology: Technology name (e.g., "React", "Next.js").
+
+    Returns:
+        List of sub_tags with high relevance (relevance_level >= 4).
+    """
+    # Convert technology name to filename
+    # "React" -> "react.json", "Next.js" -> "nextjs.json"
+    filename = technology.lower().replace(".", "").replace(" ", "_") + ".json"
+    keywords_file = KEYWORDS_DIR / filename
+
+    if not keywords_file.exists():
+        logger.debug(f"[Orchestrator] Keywords file not found for '{technology}': {keywords_file}")
+        return []
+
+    try:
+        with open(keywords_file, encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Try different possible key names for keywords data
+        keywords_data = None
+        for key in [
+            f"{technology.lower().replace('.', '').replace(' ', '_')}_keywords_with_details",
+            f"{technology.lower()}_keywords_with_details",
+            "keywords_with_details",
+            "keywords",
+        ]:
+            if key in data:
+                keywords_data = data.get(key, [])
+                break
+
+        if not keywords_data:
+            logger.warning(
+                f"[Orchestrator] No keywords data found in {filename} with expected keys"
+            )
+            return []
+
+        # Extract keywords with relevance_level >= 4
+        high_relevance_keywords = [
+            {
+                "word": kw.get("word", ""),
+                "description": kw.get("description", ""),
+                "relevance_level": kw.get("relevance_level", 0),
+                "technology": technology,  # Add technology name for reference
+            }
+            for kw in keywords_data
+            if kw.get("relevance_level", 0) >= 4
+        ]
+
+        logger.debug(
+            f"[Orchestrator] Extracted {len(high_relevance_keywords)} high-relevance sub_tags for '{technology}'"
+        )
+        return high_relevance_keywords
+
+    except Exception as e:
+        logger.error(
+            f"[Orchestrator] Failed to load sub_tags for '{technology}': {str(e)}", exc_info=True
+        )
+        return []

@@ -1,0 +1,538 @@
+{
+    "keywords_with_details": [
+      {
+        "word": "HTML",
+        "description": "Webページの構造を定義するマークアップ言語。フロントエンドの最も基本的な要素。",
+        "relevance_level": 5,
+        "tag": "Frontend"
+      },
+      {
+        "word": "CSS",
+        "description": "Webページの見た目（スタイル、レイアウト）を定義するスタイルシート言語。",
+        "relevance_level": 5,
+        "tag": "Frontend"
+      },
+      {
+        "word": "JavaScript",
+        "description": "Webページに動的な動作（インタラクション）を追加するプログラミング言語。",
+        "relevance_level": 5,
+        "tag": "Frontend"
+      },
+      {
+        "word": "DOM",
+        "description": "Document Object Modelの略。HTML/XML文書の構造をプログラムから操作するためのAPI。",
+        "relevance_level": 5,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Browser",
+        "description": "Webコンテンツを解釈・表示するためのソフトウェア（Chrome, Firefoxなど）。",
+        "relevance_level": 5,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Responsive Design",
+        "description": "画面サイズに応じてレイアウトを調整し、単一のコードベースで複数のデバイスに対応する設計手法。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "API",
+        "description": "Application Programming Interface。主にサーバーとのデータ通信に利用。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "AJAX",
+        "description": "Asynchronous JavaScript and XML。ページ全体を再読み込みせずにサーバーとデータをやり取りする技術。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Framework",
+        "description": "アプリケーションの構造や開発規則を提供する包括的なライブラリ（例: React, Vue, Angular）。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Library",
+        "description": "特定の機能（例: jQuery, Redux）を提供するコードの集合体。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "SPA",
+        "description": "Single Page Applicationの略。単一のHTMLページで動作し、動的にコンテンツをロードするWebアプリ。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "URL",
+        "description": "Uniform Resource Locator。Web上のリソース（ページ、画像など）の場所を示すアドレス。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "HTTP/HTTPS",
+        "description": "HyperText Transfer Protocol。クライアントとサーバー間のデータ通信に使用されるプロトコル。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "REST",
+        "description": "Representational State Transfer。Webサービス設計の原則の一つ。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "JSON",
+        "description": "JavaScript Object Notation。人間が読みやすく、データ交換によく使われる軽量データ形式。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "TypeScript",
+        "description": "JavaScriptに静的型付けを追加した言語。大規模開発で特に人気。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Pre-processor",
+        "description": "CSSやJavaScriptの拡張言語（Sass, Lessなど）をネイティブコードに変換するツール。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Sass",
+        "description": "CSSの記述を効率化する、最も広く使われているCSSプリプロセッサ。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Babel",
+        "description": "トランスパイラ。最新のJS構文を古いブラウザでも動作する形式に変換する。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Webpack",
+        "description": "モジュールバンドラー。複数のファイルをまとめてブラウザで実行可能な形式に変換する。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Module Bundler",
+        "description": "JavaScriptモジュールとその依存関係を解決し、一つのファイルにまとめるツール。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "npm",
+        "description": "Node.jsのパッケージ管理ツール。ライブラリのインストールに使用。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Git",
+        "description": "ソースコードのバージョン管理システム。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "SEO",
+        "description": "Search Engine Optimization。検索エンジンでの表示順位を上げるための最適化。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Performance",
+        "description": "Webサイトの読み込み速度、応答性。Lighthouseなどで評価。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Accessibility",
+        "description": "障害を持つ人々を含む、すべての人にとって使いやすいWebサイトを構築すること。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "A11y",
+        "description": "Accessibilityの略（aとyの間に11文字）。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "CORS",
+        "description": "Cross-Origin Resource Sharing。異なるオリジン間のリソース共有を可能にするセキュリティメカニズム。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Security",
+        "description": "XSSやCSRFなどからアプリケーションを保護する対策。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "DOM Manipulation",
+        "description": "JavaScriptを使用してHTML要素の構造、スタイル、内容を変更すること。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Event Loop",
+        "description": "JavaScriptが非同期操作（タイマー、I/Oなど）を管理し、実行するメカニズム。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Promise",
+        "description": "非同期処理の最終的な成功または失敗を扱うためのJavaScriptのオブジェクト。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Async/Await",
+        "description": "Promiseベースの非同期コードを同期的なコードのように記述できるJSの構文。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Web Storage",
+        "description": "ブラウザにデータを保存する仕組み（LocalStorage, SessionStorage）。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Cookie",
+        "description": "セッション管理やパーソナライズのためにブラウザに保存される小さなデータ。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Viewport",
+        "description": "Webコンテンツが表示されるブラウザウィンドウの領域。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Media Query",
+        "description": "画面サイズなどの条件に基づいて異なるCSSスタイルを適用するためのCSSの機能。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Flexbox",
+        "description": "CSSの1次元レイアウトモデル。要素の配置や間隔調整に優れる。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "CSS Grid",
+        "description": "CSSの2次元レイアウトモデル。行と列を持つ複雑なレイアウトの作成に優れる。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "DevTools",
+        "description": "ブラウザに組み込まれた、デバッグやパフォーマンス測定のための開発者ツール。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Debugging",
+        "description": "コード内のエラー（バグ）を特定し、修正するプロセス。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Testing",
+        "description": "アプリケーションが意図した通りに動作することを確認するプロセス。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Unit Testing",
+        "description": "アプリケーションの最小単位（関数など）が正しく動作するかを検証するテスト。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "End-to-End Testing",
+        "description": "ユーザーの操作をシミュレートし、システム全体をテストする手法（E2E）。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "CI/CD",
+        "description": "継続的インテグレーション/継続的デリバリー。コードの自動テスト・デプロイメントの仕組み。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Deployment",
+        "description": "開発したコードを本番環境にリリースするプロセス。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "CDN",
+        "description": "Content Delivery Network。コンテンツを地理的に分散して配信し、高速化を図る仕組み。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Caching",
+        "description": "一度取得したデータを一時的に保存し、次回以降のアクセスを高速化する技術。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Progressive Enhancement",
+        "description": "すべてのユーザーに基本的な機能を提供し、より高度なブラウザには追加の機能を提供する設計戦略。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Polyfill",
+        "description": "古いブラウザに、新しいJS/CSSの機能を提供するためのコード。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Transpiler",
+        "description": "ある言語のコードを、機能レベルで同等な別の言語のコードに変換するツール（例: Babel）。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Linter",
+        "description": "コードの静的解析を行い、構文エラーやスタイル上の問題をチェックするツール（例: ESLint）。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Prettier",
+        "description": "コードのフォーマットを自動化し、一貫性を保つためのツール。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "ES6 (ECMAScript 2015)",
+        "description": "現代のJavaScriptのバージョン。クラス、アロー関数、Promiseなどの重要機能を含む。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Virtual DOM",
+        "description": "ReactやVueなどで使用される、DOMの軽量なコピー。高速なUI更新に貢献。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "State Management",
+        "description": "アプリケーション全体のデータの状態を一元管理する手法（例: Redux, Vuex）。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "WebAssembly",
+        "description": "ブラウザで高パフォーマンスなコード（C++, Rustなど）を実行するためのバイナリ形式。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Service Worker",
+        "description": "ブラウザとネットワークの間で動作するスクリプト。オフライン機能や通知を実現。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "PWA",
+        "description": "Progressive Web App。Webサイトでありながらネイティブアプリのような体験を提供する技術。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "SSR",
+        "description": "Server-Side Rendering。初期レンダリングをサーバーで行い、パフォーマンスとSEOを向上させる手法。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "SSG",
+        "description": "Static Site Generation。ビルド時にすべてのページを静的なHTMLとして生成する手法。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Single-Threaded",
+        "description": "JavaScriptが一度に一つの処理しか実行できない特性（ただし非同期機能でマルチタスクを実現）。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Call Stack",
+        "description": "JavaScriptエンジンが実行中の関数を追跡するために使用するデータ構造。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Heap",
+        "description": "オブジェクトなどの動的なメモリ割り当てに使用されるメモリ領域。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Garbage Collection",
+        "description": "JavaScriptエンジンが不要になったメモリを自動的に解放するプロセス。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "V8 Engine",
+        "description": "Google ChromeやNode.jsで使用されているJavaScriptエンジン。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Scope",
+        "description": "変数や関数がアクセス可能である範囲。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Closure",
+        "description": "関数が、それが作成されたスコープの変数にアクセスできる仕組み。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Hoisting",
+        "description": "変数や関数の宣言がスコープの先頭に移動されたように振る舞うJavaScriptの特性。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Immutability",
+        "description": "データが一度作成されたら変更されないこと。予測可能なState管理に不可欠。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Destructuring",
+        "description": "配列やオブジェクトから値を簡単に抽出できるJavaScriptの構文。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Spread Operator",
+        "description": "配列やオブジェクトを結合・コピーするJSの構文。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Memoization",
+        "description": "関数の結果をキャッシュし、不要な再計算を避ける最適化手法。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "UI/UX",
+        "description": "ユーザーインターフェース/ユーザーエクスペリエンス。フロントエンドの主要な目的。",
+        "relevance_level": 4,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Wireframe",
+        "description": "Webページの骨格を定義するシンプルな設計図。",
+        "relevance_level": 1,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Mockup",
+        "description": "Webサイトの最終的な見た目を詳細に示す静的な画像。",
+        "relevance_level": 1,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Prototype",
+        "description": "Webサイトの機能やインタラクションをシミュレートする動作可能なモデル。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Design System",
+        "description": "デザイン原則、パターン、コンポーネントの再利用可能なコレクション。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Atomic Design",
+        "description": "UIをアトム、分子、有機体などの階層で考えるデザイン手法。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Custom Element",
+        "description": "Web Componentの一部。独自のHTMLタグを作成する機能。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Shadow DOM",
+        "description": "Web Componentの一部。スタイルやスクリプトが隔離されたDOMサブツリー。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Web Workers",
+        "description": "ブラウザでバックグラウンドスレッドを実行し、メインスレッドのブロックを防ぐ仕組み。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "GraphQL",
+        "description": "APIのためのクエリ言語。クライアントが必要なデータだけを要求できる。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "WebSocket",
+        "description": "クライアントとサーバー間でリアルタイムの双方向通信を可能にするプロトコル。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "i18n",
+        "description": "Internationalization（国際化）。アプリケーションを複数の言語に対応させること。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "l10n",
+        "description": "Localization（地域化）。特定の地域や文化に合わせてコンテンツを適応させること。",
+        "relevance_level": 2,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Lazy Loading",
+        "description": "画像やコンポーネントなどのリソースを、必要になった時点で遅延してロードする手法。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Code Splitting",
+        "description": "コードのバンドルを分割し、必要な部分だけをロードして初期読み込みを高速化する技術。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      },
+      {
+        "word": "Tree Shaking",
+        "description": "最終的なバンドルから未使用のコードを削除し、ファイルサイズを削減する手法。",
+        "relevance_level": 3,
+        "tag": "Frontend"
+      }
+    ]
+}
