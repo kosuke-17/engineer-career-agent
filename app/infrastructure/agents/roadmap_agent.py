@@ -311,8 +311,7 @@ async def roadmap_agent_stream(state: AgentState) -> AsyncGenerator[dict[str, An
 
     Yields:
         Dictionary with streaming event data:
-        - {"type": "chunk", "content": "partial JSON string"}
-        - {"type": "progress", "roadmap": {...}, "complete": false}
+        - {"type": "phase", "technology": "...", "phaseName": "...", "order": 1, "phase": {...}, "complete": false}
         - {"type": "complete", "roadmap": {...}, "complete": true}
         - {"type": "error", "error": "error message"}
     """
@@ -343,6 +342,7 @@ async def roadmap_agent_stream(state: AgentState) -> AsyncGenerator[dict[str, An
         # Buffer to accumulate streaming chunks
         buffer = ""
         last_valid_json: dict[str, Any] = {}
+        last_sent_phases: set[tuple[str, int]] = set()
 
         # Stream LLM response
         async for chunk in llm.astream(messages):
@@ -350,22 +350,24 @@ async def roadmap_agent_stream(state: AgentState) -> AsyncGenerator[dict[str, An
                 content = str(chunk.content)
                 buffer += content
 
-                # Yield raw chunk for progress indication
-                yield {
-                    "type": "chunk",
-                    "content": content,
-                }
-
                 # Try to parse partial JSON from buffer
                 # Look for complete JSON objects in the buffer
                 parsed_json = _try_parse_partial_json(buffer)
                 if parsed_json and parsed_json != last_valid_json:
                     last_valid_json = parsed_json
-                    yield {
-                        "type": "progress",
-                        "roadmap": parsed_json,
-                        "complete": False,
-                    }
+                    # Extract completed phases and yield them
+                    completed_phases = _extract_completed_phases(parsed_json, last_sent_phases)
+                    for phase_data in completed_phases:
+                        phase_key = (phase_data["technology"], phase_data["order"])
+                        last_sent_phases.add(phase_key)
+                        yield {
+                            "type": "phase",
+                            "technology": phase_data["technology"],
+                            "phaseName": phase_data["phaseName"],
+                            "order": phase_data["order"],
+                            "phase": phase_data["phase"],
+                            "complete": False,
+                        }
 
         # After streaming is complete, try to parse final JSON
         logger.debug(f"[Roadmap Stream] Final buffer length: {len(buffer)} chars")
@@ -397,6 +399,46 @@ async def roadmap_agent_stream(state: AgentState) -> AsyncGenerator[dict[str, An
             "type": "error",
             "error": f"Roadmap agent error: {str(e)}",
         }
+
+
+def _extract_completed_phases(
+    roadmap_json: dict[str, Any], last_sent_phases: set[tuple[str, int]]
+) -> list[dict[str, Any]]:
+    """Extract completed phases from roadmap JSON.
+
+    Args:
+        roadmap_json: Parsed roadmap JSON
+        last_sent_phases: Set of (technology_name, order) tuples that were already sent
+
+    Returns:
+        List of completed phase data with technology name and phase info
+    """
+    completed_phases = []
+    technologies = roadmap_json.get("technologies", [])
+
+    for tech in technologies:
+        tech_name = tech.get("name", "")
+        phases = tech.get("phases", [])
+
+        for phase in phases:
+            phase_order = phase.get("order")
+            phase_name = phase.get("phaseName", "")
+            steps = phase.get("steps", [])
+
+            # Check if phase is complete (has at least one step)
+            if phase_order and steps and len(steps) > 0:
+                phase_key = (tech_name, phase_order)
+                if phase_key not in last_sent_phases:
+                    completed_phases.append(
+                        {
+                            "technology": tech_name,
+                            "phase": phase,
+                            "order": phase_order,
+                            "phaseName": phase_name,
+                        }
+                    )
+
+    return completed_phases
 
 
 def _try_parse_partial_json(text: str) -> dict[str, Any]:

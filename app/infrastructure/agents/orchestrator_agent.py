@@ -22,37 +22,160 @@ logger = logging.getLogger(__name__)
 KEYWORDS_DIR = Path(__file__).parent
 
 # System prompt for tag extraction
-TAG_EXTRACTION_PROMPT = """あなたは技術タグ抽出の専門家です。
-ユーザーの要求文から、学習対象となる技術キーワード（タグ）を抽出してください。
+TAG_EXTRACTION_PROMPT = """ユーザーの要求文から、学習対象となる技術キーワード（タグ）を抽出してください。**技術名だけでなく、要求文や文脈に含まれる形容詞にも着目し、その内容が技術選定や特徴に影響する場合は、該当する技術キーワードや特性タグも抽出対象に含めてください。**
 
-## 重要：出力言語
+# 詳細な手順
+
+- 技術名（プログラミング言語、フレームワーク、ライブラリ、ツールなど）はこれまで通り明確に抽出すること。
+- 要求文内の形容詞（例：「高速な」「セキュアな」「モダンな」「拡張性の高い」「使いやすい」など）がシステムの仕様・特徴・目的に影響する場合、その意味に応じて関連する技術・設計手法・アーキテクチャ・概念タグ（例：「Performance」「Security」「Scalability」「Usability」「Modern」など）も積極的にタグとして追加すること。
+
+# 重要：出力言語
 - **reasoning（抽出理由）は必ず日本語で記述してください**
-- tags（技術名）は正式な英語名称で出力してください（例：React, TypeScript, Docker）
+- tags（技術名や特性名）は正式な英語名称で出力してください（例：React, TypeScript, Docker, Security, Performance）
 
-## 抽出ルール
+# 抽出ルール
+
 1. プログラミング言語、フレームワーク、ライブラリ、ツールなどの具体的な技術名を抽出
 2. 一般的な用語（「学習」「ロードマップ」など）は除外
 3. 技術名は正式名称で出力（例：「リアクト」→「React」）
-4. 関連性の高い技術も含める（例：Next.jsが含まれる場合、Reactも含める）
+4. **関連性の高い技術を積極的に含める**（以下の関連性／特性マッピングを参照）
+5. **要求文に含まれる形容詞による特性や要件（例：「セキュアな」「高速な」）は、該当する特性タグや関連技術タグ（「Security」「Performance」「Scalability」など）を追加**
 
-## 出力形式
-必ず以下のJSON形式で出力してください：
-```json
+# 技術・特性関連性マッピング
+
+### フロントエンド関連
+- 「フロントエンド」「Web開発」「Webアプリ」が含まれる場合：
+  - 基礎技術: HTML, CSS, JavaScript
+  - フレームワーク: React, Vue, Angular（文脈から判断）
+  - 関連ツール: Node.js, npm, Vite, Webpack
+
+### TypeScript関連
+- 「TypeScript」が含まれる場合：
+  - 前提知識: JavaScript（必須）
+  - フロントエンド文脈: React, Vue, Angular, Next.js, Nuxt.js
+  - バックエンド文脈: Node.js, Express, NestJS
+  - ビルドツール: Vite, Webpack, esbuild
+
+### React関連
+- 「React」が含まれる場合：
+  - 前提知識: JavaScript, HTML, CSS
+  - 推奨技術: TypeScript（大規模開発で推奨）
+  - 関連フレームワーク: Next.js, Remix, Gatsby
+  - 状態管理: Redux, Zustand, Context API
+
+### Next.js関連
+- 「Next.js」が含まれる場合：
+  - 必須技術: React
+  - 推奨技術: TypeScript
+  - 関連技術: Node.js, Vercel
+
+### バックエンド関連
+- 「バックエンド」「サーバー」「API」が含まれる場合：
+  - 言語: Node.js, Python, Java, Go, Rust（文脈から判断）
+  - フレームワーク: Express, FastAPI, Spring Boot, Gin（言語に応じて）
+  - データベース: PostgreSQL, MySQL, MongoDB（文脈から判断）
+
+### Vue関連
+- 「Vue」が含まれる場合：
+  - 前提知識: JavaScript, HTML, CSS
+  - 推奨技術: TypeScript
+  - 関連フレームワーク: Nuxt.js
+  - 状態管理: Pinia, Vuex
+
+### Angular関連
+- 「Angular」が含まれる場合：
+  - 必須技術: TypeScript
+  - 前提知識: JavaScript, HTML, CSS
+  - 関連技術: RxJS, Angular CLI
+
+### 形容詞・特性マッピング例
+- 「高速な」「パフォーマンスが高い」→ Performance
+- 「セキュアな」「安全な」→ Security
+- 「モダンな」「最新の」→ Modern
+- 「拡張性の高い」→ Scalability
+- 「使いやすい」「ユーザビリティが高い」→ Usability
+- 「高可用性」「信頼性が高い」→ Reliability, Availability
+- 「保守性が高い」→ Maintainability
+- 「レスポンシブ」→ ResponsiveDesign
+- 文脈や複数形容詞が使われる場合は、意味に合致する特性タグを複数追加
+
+# 抽出の優先順位
+
+1. **明示的に指定された技術**を最優先で抽出
+2. **必要な前提知識**（例：TypeScript → JavaScript）を追加
+3. **一般的に併用される技術**（例：Next.js → React, TypeScript）を追加
+4. **文脈や形容詞、特性ワードから推測できる技術・特性タグ**（例：「高速なシステム」→ Performance、「セキュアなAPI」→ Security）を追加
+
+# 出力形式
+
+以下のJSON形式で必ず出力してください（code block不要）:
 {
-    "tags": ["技術名1", "技術名2", "技術名3"],
-    "reasoning": "抽出理由の簡潔な説明（日本語で記述）"
+    "tags": ["技術名/特性名1", "技術名/特性名2", ...],
+    "reasoning": "抽出理由の簡潔な説明（日本語）"
 }
-```
 
-## 例
+# Examples
+
+例1: フロントエンド開発（形容詞なし）
+入力: 「フロントエンド開発を学びたい」
+出力:
+{
+    "tags": ["Frontend", "HTML", "CSS", "JavaScript"],
+    "reasoning": "フロントエンド開発にはHTML、CSS、JavaScriptの基礎知識が必須のため、これらを抽出しました。"
+}
+
+例2: TypeScript（形容詞なし）
+入力: 「TypeScriptでアプリを作りたい」
+出力:
+{
+    "tags": ["TypeScript", "JavaScript", "Node.js"],
+    "reasoning": "TypeScriptはJavaScriptのスーパーセットなのでJavaScriptの知識が必要です。アプリ開発にはNode.jsもよく利用されるため追加しました。"
+}
+
+例3: React + Next.js（形容詞なし）
 入力: 「ReactとNext.jsでWebアプリを作りたい」
 出力:
-```json
 {
-    "tags": ["React", "Next.js", "TypeScript"],
-    "reasoning": "ReactとNext.jsがユーザーにより明示的に指定されています。Next.jsではTypeScriptの使用が推奨されるため、関連技術として追加しました。"
+    "tags": ["React", "Next.js", "TypeScript", "JavaScript", "HTML", "CSS"],
+    "reasoning": "ReactとNext.jsが明示的に指定されています。Next.jsの利用にはTypeScriptが推奨され、ReactにはJavaScript、HTML、CSSの知識が必要です。"
 }
-```
+
+例4: バックエンド + API（形容詞なし）
+入力: 「バックエンドAPIを開発したい」
+出力:
+{
+    "tags": ["Backend", "Node.js", "Express", "REST"],
+    "reasoning": "バックエンドAPI開発にはNode.jsとExpressが一般的です。API設計にはRESTが標準的なため追加しました。"
+}
+
+例5: 形容詞による特性タグ
+入力: 「セキュアなWebアプリをReactで作りたい」
+出力:
+{
+    "tags": ["React", "JavaScript", "HTML", "CSS", "Security"],
+    "reasoning": "ReactでWebアプリという要件より、Reactおよびその前提技術を抽出。さらに「セキュアな」という形容詞からSecurityの特性タグを追加しました。"
+}
+
+例6: 複数の形容詞
+入力: 「高速で拡張性の高いバックエンドAPIを開発したい」
+出力:
+{
+    "tags": ["Backend", "Node.js", "Express", "REST", "Performance", "Scalability"],
+    "reasoning": "バックエンドAPI開発よりNode.jsやExpress、RESTを抽出。「高速で拡張性の高い」という形容詞よりPerformanceとScalabilityの特性タグを追加しました。"
+}
+
+# Notes
+
+- 形容詞や特性に基づくタグ選定は、文脈から該当しない場合は無理に追加せず、実際に関連性が高い場合のみ追加してください。
+- タグの粒度は過度に細かくならないように、主要な特性キーワードのみを採用してください。
+- 可能な限り、技術名と特性タグの双方を漏れなく抽出してください。
+
+# Output Format
+
+- 出力は必ずJSON形式で、tagsは英語の技術名・特性名配列、reasoningは日本語の完結な説明文（最大3文）。
+- Code blockで囲まないこと（markdownコードや```は不要）。
+
+（重要：必ず冒頭と最後で「形容詞も抽出対象に含める」点を強調し、形容詞起因でタグが増える具体例を示すこと）
 """
 
 

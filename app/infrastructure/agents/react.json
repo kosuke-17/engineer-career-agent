@@ -1,574 +1,690 @@
 {
-    "keywords_with_details": [
-      {
-        "word": "Component",
-        "description": "UIを構築するための独立した再利用可能なコードの塊。Reactの基本単位。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "JSX",
-        "description": "JavaScript内でHTMLのような構文を書くための拡張機能。Reactの記述に必須。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Hooks",
-        "description": "関数コンポーネントでStateやライフサイクルなどのReact機能を使うための仕組み。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "State",
-        "description": "コンポーネントの内部で管理され、変更によってUIの再レンダリングを引き起こすデータ。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Props",
-        "description": "親コンポーネントから子コンポーネントにデータを渡すための読み取り専用のプロパティ。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Virtual DOM",
-        "description": "実際のDOMの軽量なコピー。Reactが変更点を効率的に検知し、実際のDOMに反映するために使用。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Render",
-        "description": "コンポーネントがUIを生成するプロセス。StateやPropsの変更で再実行される。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Lifecycle",
-        "description": "コンポーネントがマウント、更新、アンマウントされるまでのフェーズ。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Functional Component",
-        "description": "Hooksの導入により主流となった、JavaScriptの関数として定義されるコンポーネント。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Class Component",
-        "description": "ES6のクラスとして定義される、Hooks導入前のReactのコンポーネント形式。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Reconciliation",
-        "description": "Virtual DOMの差分を計算し、実際のDOMへの更新を最小限に抑えるReactのプロセス。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Fiber",
-        "description": "Reactの新しいReconciliationエンジン。非同期レンダリングを可能にする。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Effect Hook",
-        "description": "副作用（データ取得、DOM操作など）を関数コンポーネント内で処理するための`useEffect`。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "State Hook",
-        "description": "関数コンポーネントにStateを追加するための`useState`。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Context",
-        "description": "Propsのバケツリレーを避け、コンポーネントツリー全体でデータを共有する仕組み。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Provider",
-        "description": "Contextを使用してデータを提供するコンポーネント。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Consumer",
-        "description": "Contextからデータを受け取るコンポーネント（Hooksの`useContext`が一般的）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Router",
-        "description": "Reactアプリケーション内でURLに基づいて表示するコンポーネントを切り替えるライブラリ（例：React Router）。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "useState",
-        "description": "State Hookとして、関数コンポーネントに状態変数とその更新関数を提供する。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "useEffect",
-        "description": "Effect Hookとして、コンポーネントのレンダリング後に副作用を実行する。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "useContext",
-        "description": "Context Hookとして、コンテキストから値を取得する。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "useReducer",
-        "description": "複雑なStateロジックを管理するための代替のState Hook。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "useMemo",
-        "description": "高価な計算の結果をキャッシュし、不要な再計算を防ぐためのHooks。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "useCallback",
-        "description": "関数定義自体をキャッシュし、子コンポーネントへの不要な再レンダリングを防ぐHooks。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "useRef",
-        "description": "DOMノードや可変値への参照を保持するためのHooks。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Redux",
-        "description": "大規模アプリケーションでStateを一元管理するための最も一般的なライブラリ。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Store",
-        "description": "Reduxにおいて、アプリケーション全体の状態を保持する単一のオブジェクト。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Action",
-        "description": "Reduxにおいて、Stateの変更意図を記述するプレーンなJavaScriptオブジェクト。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Reducer",
-        "description": "Reduxにおいて、現在とActionから新しいStateを返す純粋関数。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Dispatch",
-        "description": "Reduxにおいて、ActionをStoreに送り、Stateの更新をトリガーする関数。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Selector",
-        "description": "Reduxにおいて、Storeから必要なStateの一部を抽出する関数。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Middleware",
-        "description": "Reduxにおいて、ActionがReducerに到達する前に非同期処理などを実行する層。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Thunk",
-        "description": "非同期ActionをReduxで扱うための一般的なMiddleware（例：Redux Thunk）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Saga",
-        "description": "より複雑な非同期処理をReduxで扱うためのMiddleware（例：Redux Saga）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Flux",
-        "description": "Reduxの基になった、Facebookが提唱した一方向のデータフロー・アーキテクチャ。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "TypeScript",
-        "description": "静的型付けを追加し、大規模なReactアプリケーションの保守性を高める言語。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "JavaScript",
-        "description": "Reactの基盤となるプログラミング言語。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Node.js",
-        "description": "React開発環境（ビルドツール、パッケージ管理など）を実行するための環境。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "npm",
-        "description": "JavaScriptのパッケージ管理ツール。Reactライブラリや関連ツールをインストールする。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Yarn",
-        "description": "npmの代替となるパッケージ管理ツール。",
-        "relevance_level": 2,
-        "tag": "React"
-      },
-      {
-        "word": "Webpack",
-        "description": "モジュールバンドラー。複数のファイルをまとめてブラウザで実行可能な形式に変換する。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Babel",
-        "description": "トランスパイラ。JSXやES6+のコードを古いブラウザでも動作するJSに変換する。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "ES6",
-        "description": "現代のJavaScriptのバージョン。React開発で多用される構文（クラス、アロー関数など）を含む。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Arrow Function",
-        "description": "コードを簡潔にし、`this`のスコープ問題を回避できるJavaScriptの関数定義。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Destructuring",
-        "description": "配列やオブジェクトから値を簡単に抽出できるJavaScriptの機能（Propsの受け取りによく使われる）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Spread Operator",
-        "description": "配列やオブジェクトを結合・コピーするJavaScriptの構文（Stateの不変性を保つのに重要）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Async/Await",
-        "description": "非同期処理（データ取得など）を同期的なコードのように記述できるJSの構文。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Promise",
-        "description": "非同期処理の最終的な完了（または失敗）を表すJavaScriptのオブジェクト。",
-        "relevance_level": 2,
-        "tag": "React"
-      },
-      {
-        "word": "API",
-        "description": "外部サーバーからデータを取得するためにReactアプリが通信するインターフェース。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Fetch",
-        "description": "ブラウザに組み込まれた、非同期でリソースを取得するためのAPI。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Axios",
-        "description": "広く使われているPromiseベースのHTTPクライアントライブラリ。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Styling",
-        "description": "Reactコンポーネントに見た目を適用するプロセス。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "CSS",
-        "description": "Webページのスタイルを定義する言語。",
-        "relevance_level": 2,
-        "tag": "React"
-      },
-      {
-        "word": "CSS-in-JS",
-        "description": "JavaScriptのコード内でCSSを記述する手法。Reactで特に人気。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Styled-components",
-        "description": "最も人気のあるCSS-in-JSライブラリの1つ。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Material UI",
-        "description": "GoogleのMaterial Designに基づく、事前に構築されたUIコンポーネントライブラリ。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Bootstrap",
-        "description": "レスポンシブなWebデザインのための最も一般的なCSSフレームワーク。",
-        "relevance_level": 2,
-        "tag": "React"
-      },
-      {
-        "word": "Testing",
-        "description": "Reactコンポーネントやロジックの動作を確認するプロセス。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Jest",
-        "description": "Facebookによって開発された、広く使われているJavaScriptのテストフレームワーク。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Enzyme",
-        "description": "Reactコンポーネントのテストを簡単にするためのユーティリティ（Hooks以前によく使われた）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "React Testing Library",
-        "description": "ユーザー目線でのテストを推奨する、現在の主流なテストライブラリ。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Snapshot Testing",
-        "description": "コンポーネントのUI構造の「スナップショット」を保存し、予期せぬ変更を検出するテスト手法。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Server-Side Rendering",
-        "description": "初期レンダリングをサーバーで行い、パフォーマンスとSEOを向上させる手法（SSR）。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "SSR",
-        "description": "Server-Side Renderingの略。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Next.js",
-        "description": "SSR、SSG、ルーティングなどを簡単に実現できる人気のReactフレームワーク。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Gatsby",
-        "description": "静的サイト生成（SSG）に特化したReactベースのフレームワーク。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Static Site Generation",
-        "description": "ビルド時にすべてのページを静的なHTMLファイルとして生成する手法（SSG）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "SSG",
-        "description": "Static Site Generationの略。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Hydration",
-        "description": "SSRやSSGで配信されたHTMLに、クライアント側でイベントハンドラなどを付加してインタラクティブにするプロセス。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Key",
-        "description": "リスト内の要素を一意に識別するために設定される特別なProps。Reconciliationの効率化に不可欠。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Fragment",
-        "description": "DOMに余分なノードを追加せずに、複数の要素をグループ化するためのコンポーネント。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Portal",
-        "description": "子コンポーネントを親コンポーネントのDOM階層外にレンダリングする機能。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Error Boundary",
-        "description": "子コンポーネントツリー内のJavaScriptエラーをキャッチし、代替UIを表示するクラスコンポーネント。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "HOC",
-        "description": "Higher-Order Componentの略。コンポーネントロジックを再利用するためのパターン。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Custom Hook",
-        "description": "`use`で始まる関数名を持つ、独自のHooks。ロジックの再利用に役立つ。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Dependency Array",
-        "description": "`useEffect`や`useMemo`などのHooksに渡す配列。変更があったときのみ再実行されるように制御する。",
-        "relevance_level": 5,
-        "tag": "React"
-      },
-      {
-        "word": "Memoization",
-        "description": "関数の結果やコンポーネントをキャッシュし、不要な再計算や再レンダリングを避ける手法。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Immutable",
-        "description": "Stateを直接変更せず、常に新しいオブジェクトとして扱うこと。Reactの原則。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Developer Tools",
-        "description": "ブラウザ拡張機能として提供される、Reactコンポーネントのデバッグ・検査ツール。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Performance",
-        "description": "アプリケーションの速度と効率。ReactではVirtual DOMやMemoizationで最適化を図る。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Optimization",
-        "description": "アプリケーションのパフォーマンスを向上させるための手法。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Code Splitting",
-        "description": "バンドルファイルを分割し、必要なコードのみをロードして初期ロード時間を短縮する技術。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Suspense",
-        "description": "コンポーネントがデータをロードする間、待機状態を宣言的に扱うためのReact機能。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Lazy",
-        "description": "コンポーネントの遅延ロードを可能にする機能（React.lazy）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "StrictMode",
-        "description": "開発モードで潜在的な問題を検出するために、コンポーネント内のチェックを有効にするツール。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Synthetic Event",
-        "description": "ブラウザ間の互換性を確保するためにReactが提供するイベントシステムのラッパー。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Form",
-        "description": "ユーザー入力の収集に使用されるUI要素。ReactでのState管理が重要。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Controlled Component",
-        "description": "フォームの入力値をReactのStateで完全に制御するコンポーネント。",
-        "relevance_level": 4,
-        "tag": "React"
-      },
-      {
-        "word": "Uncontrolled Component",
-        "description": "フォームの入力値をDOM自体で管理し、`useRef`などでアクセスするコンポーネント。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Validation",
-        "description": "フォームに入力されたデータが正しいかどうかを確認するプロセス。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "Accessibility",
-        "description": "Webサイトを障害を持つ人々にとって使いやすくすること（A11y）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "A11y",
-        "description": "Accessibilityの略（a11y: a, 11 letters, y）。",
-        "relevance_level": 3,
-        "tag": "React"
-      },
-      {
-        "word": "UI/UX",
-        "description": "ユーザーインターフェース/ユーザーエクスペリエンス。Reactが構築する主要な要素。",
-        "relevance_level": 2,
-        "tag": "React"
-      },
-      {
-        "word": "Web Development",
-        "description": "Reactが使用される開発領域全般。",
-        "relevance_level": 1,
-        "tag": "React"
-      },
-      {
-        "word": "Single Page Application",
-        "description": "SPA。単一のHTMLページで動作し、動的にコンテンツをロードするWebアプリケーション。Reactの得意分野。",
-        "relevance_level": 3,
-        "tag": "React"
-      }
-    ]
-  }
+  "keywords_with_details": [
+    {
+      "word": "useState",
+      "description": "コンポーネントの内部で管理され、変更によってUIの再レンダリングを引き起こすデータ。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "useState",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "useState",
+          "url": "https://ja.react.dev/reference/react/useState"
+        }
+      ]
+    },
+    {
+      "word": "useEffect",
+      "description": "副作用（データ取得、DOM操作など）を関数コンポーネント内で処理するための`useEffect`。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "useEffect",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "useEffect",
+          "url": "https://ja.react.dev/reference/react/useEffect"
+        }
+      ]
+    },
+    {
+      "word": "SSR",
+      "description": "初期レンダリングをサーバーで行い、パフォーマンスとSEOを向上させる手法（SSR）。",
+      "relevance_level": 4,
+      "tag": "React",
+      "is_recommended": false
+    },
+    {
+      "word": "SSG",
+      "description": "ビルド時にすべてのページを静的なHTMLファイルとして生成する手法（SSG）。",
+      "relevance_level": 3,
+      "tag": "React",
+      "is_recommended": false
+    },
+    {
+      "word": "Accessibility",
+      "description": "Accessibilityの略（a11y: a, 11 letters, y）。",
+      "relevance_level": 3,
+      "tag": "React",
+      "is_recommended": false
+    },
+    {
+      "word": "Component",
+      "description": "UIを構築するための独立した再利用可能なコードの塊。Reactの基本単位。",
+      "relevance_level": 5,
+      "tag": "React"
+    },
+    {
+      "word": "JSX",
+      "description": "JavaScript内でHTMLのような構文を書くための拡張機能。Reactの記述に必須。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "jsx",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "React公式 JSX",
+          "url": "https://ja.react.dev/learn/writing-markup-with-jsx"
+        }
+      ]
+    },
+    {
+      "word": "Hooks",
+      "description": "関数コンポーネントでStateやライフサイクルなどのReact機能を使うための仕組み。",
+      "relevance_level": 5,
+      "tag": "React"
+    },
+    {
+      "word": "Props",
+      "description": "親コンポーネントから子コンポーネントにデータを渡すための読み取り専用のプロパティ。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "props",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Props",
+          "url": "https://ja.react.dev/learn/passing-props-to-a-component"
+        }
+      ]
+    },
+    {
+      "word": "Virtual DOM",
+      "description": "実際のDOMの軽量なコピー。Reactが変更点を効率的に検知し、実際のDOMに反映するために使用。",
+      "relevance_level": 5,
+      "tag": "React"
+    },
+    {
+      "word": "Render",
+      "description": "コンポーネントがUIを生成するプロセス。StateやPropsの変更で再実行される。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Lifecycle",
+      "description": "コンポーネントがマウント、更新、アンマウントされるまでのフェーズ。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Functional Component",
+      "description": "Hooksの導入により主流となった、JavaScriptの関数として定義されるコンポーネント。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Class Component",
+      "description": "ES6のクラスとして定義される、Hooks導入前のReactのコンポーネント形式。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Reconciliation",
+      "description": "Virtual DOMの差分を計算し、実際のDOMへの更新を最小限に抑えるReactのプロセス。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Fiber",
+      "description": "Reactの新しいReconciliationエンジン。非同期レンダリングを可能にする。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Context",
+      "description": "Propsのバケツリレーを避け、コンポーネントツリー全体でデータを共有する仕組み。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "context-api",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Context",
+          "url": "https://ja.react.dev/learn/passing-data-deeply-with-context"
+        }
+      ]
+    },
+    {
+      "word": "Provider",
+      "description": "Contextを使用してデータを提供するコンポーネント。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Consumer",
+      "description": "Contextからデータを受け取るコンポーネント（Hooksの`useContext`が一般的）。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Router",
+      "description": "Reactアプリケーション内でURLに基づいて表示するコンポーネントを切り替えるライブラリ（例：React Router）。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "tanstack-router",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "TanStack Router",
+          "url": "https://tanstack.com/router/latest"
+        }
+      ]
+    },
+    {
+      "word": "useContext",
+      "description": "Context Hookとして、コンテキストから値を取得する。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "useContext",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "useContext",
+          "url": "https://ja.react.dev/reference/react/useContext"
+        }
+      ]
+    },
+    {
+      "word": "useReducer",
+      "description": "複雑なStateロジックを管理するための代替のState Hook。",
+      "relevance_level": 3,
+      "tag": "React",
+      "roadmap_id": "useReducer",
+      "resources": [
+        {
+          "label": "useReducer",
+          "url": "https://ja.react.dev/reference/react/useReducer"
+        }
+      ]
+    },
+    {
+      "word": "useMemo",
+      "description": "高価な計算の結果をキャッシュし、不要な再計算を防ぐためのHooks。",
+      "relevance_level": 4,
+      "tag": "React",
+      "roadmap_id": "useMemo",
+      "resources": [
+        {
+          "label": "useMemo",
+          "url": "https://ja.react.dev/reference/react/useMemo"
+        }
+      ]
+    },
+    {
+      "word": "useCallback",
+      "description": "関数定義自体をキャッシュし、子コンポーネントへの不要な再レンダリングを防ぐHooks。",
+      "relevance_level": 4,
+      "tag": "React",
+      "roadmap_id": "useCallback",
+      "resources": [
+        {
+          "label": "useCallback",
+          "url": "https://ja.react.dev/reference/react/useCallback"
+        }
+      ]
+    },
+    {
+      "word": "useRef",
+      "description": "DOMノードや可変値への参照を保持するためのHooks。",
+      "relevance_level": 3,
+      "tag": "React",
+      "roadmap_id": "useRef",
+      "resources": [
+        {
+          "label": "useRef",
+          "url": "https://ja.react.dev/reference/react/useRef"
+        }
+      ]
+    },
+    {
+      "word": "Redux",
+      "description": "大規模アプリケーションでStateを一元管理するための最も一般的なライブラリ。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Store",
+      "description": "Reduxにおいて、アプリケーション全体の状態を保持する単一のオブジェクト。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Action",
+      "description": "Reduxにおいて、Stateの変更意図を記述するプレーンなJavaScriptオブジェクト。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Reducer",
+      "description": "Reduxにおいて、現在とActionから新しいStateを返す純粋関数。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Dispatch",
+      "description": "Reduxにおいて、ActionをStoreに送り、Stateの更新をトリガーする関数。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Selector",
+      "description": "Reduxにおいて、Storeから必要なStateの一部を抽出する関数。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Middleware",
+      "description": "Reduxにおいて、ActionがReducerに到達する前に非同期処理などを実行する層。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Flux",
+      "description": "Reduxの基になった、Facebookが提唱した一方向のデータフロー・アーキテクチャ。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "TypeScript",
+      "description": "静的型付けを追加し、大規模なReactアプリケーションの保守性を高める言語。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "typescript",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "TypeScript公式",
+          "url": "https://www.typescriptlang.org/ja/docs/"
+        }
+      ]
+    },
+    {
+      "word": "JavaScript",
+      "description": "ES6+、非同期処理、DOM操作、モジュールシステム",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "javascript",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "JavaScript.info",
+          "url": "https://ja.javascript.info/"
+        }
+      ]
+    },
+    {
+      "word": "Node.js",
+      "description": "React開発環境（ビルドツール、パッケージ管理など）を実行するための環境。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "npm",
+      "description": "JavaScriptのパッケージ管理ツール。Reactライブラリや関連ツールをインストールする。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Yarn",
+      "description": "npmの代替となるパッケージ管理ツール。",
+      "relevance_level": 2,
+      "tag": "React"
+    },
+    {
+      "word": "Webpack",
+      "description": "モジュールバンドラー。複数のファイルをまとめてブラウザで実行可能な形式に変換する。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Babel",
+      "description": "トランスパイラ。JSXやES6+のコードを古いブラウザでも動作するJSに変換する。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "ES6",
+      "description": "現代のJavaScriptのバージョン。React開発で多用される構文（クラス、アロー関数など）を含む。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Arrow Function",
+      "description": "コードを簡潔にし、`this`のスコープ問題を回避できるJavaScriptの関数定義。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Destructuring",
+      "description": "配列やオブジェクトから値を簡単に抽出できるJavaScriptの機能（Propsの受け取りによく使われる）。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Spread Operator",
+      "description": "配列やオブジェクトを結合・コピーするJavaScriptの構文（Stateの不変性を保つのに重要）。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Async/Await",
+      "description": "非同期処理（データ取得など）を同期的なコードのように記述できるJSの構文。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Promise",
+      "description": "非同期処理の最終的な完了（または失敗）を表すJavaScriptのオブジェクト。",
+      "relevance_level": 2,
+      "tag": "React"
+    },
+    {
+      "word": "API",
+      "description": "外部サーバーからデータを取得するためにReactアプリが通信するインターフェース。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Fetch",
+      "description": "ブラウザに組み込まれた、非同期でリソースを取得するためのAPI。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Axios",
+      "description": "広く使われているPromiseベースのHTTPクライアントライブラリ。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Styling",
+      "description": "Reactコンポーネントに見た目を適用するプロセス。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "CSS",
+      "description": "Flexbox、Grid、レスポンシブデザイン、アニメーション",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "tailwindcss",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Tailwind CSS",
+          "url": "https://tailwindcss.com/"
+        }
+      ]
+    },
+    {
+      "word": "CSS-in-JS",
+      "description": "JavaScriptのコード内でCSSを記述する手法。Reactで特に人気。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Styled-components",
+      "description": "最も人気のあるCSS-in-JSライブラリの1つ。",
+      "relevance_level": 3,
+      "tag": "React",
+      "roadmap_id": "styled-components",
+      "resources": [
+        {
+          "label": "Styled Components",
+          "url": "https://styled-components.com/"
+        }
+      ]
+    },
+    {
+      "word": "Material UI",
+      "description": "GoogleのMaterial Designに基づく、事前に構築されたUIコンポーネントライブラリ。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Bootstrap",
+      "description": "レスポンシブなWebデザインのための最も一般的なCSSフレームワーク。",
+      "relevance_level": 2,
+      "tag": "React"
+    },
+    {
+      "word": "Testing",
+      "description": "Reactコンポーネントやロジックの動作を確認するプロセス。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Jest",
+      "description": "Facebookによって開発された、広く使われているJavaScriptのテストフレームワーク。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Enzyme",
+      "description": "Reactコンポーネントのテストを簡単にするためのユーティリティ（Hooks以前によく使われた）。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "React Testing Library",
+      "description": "ユーザー目線でのテストを推奨する、現在の主流なテストライブラリ。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "react-testing-library",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Testing Library",
+          "url": "https://testing-library.com/docs/react-testing-library/intro/"
+        }
+      ]
+    },
+    {
+      "word": "Snapshot Testing",
+      "description": "コンポーネントのUI構造の「スナップショット」を保存し、予期せぬ変更を検出するテスト手法。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Next.js",
+      "description": "SSR、SSG、ルーティングなどを簡単に実現できる人気のReactフレームワーク。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "nextjs",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Next.js",
+          "url": "https://nextjs.org/"
+        }
+      ]
+    },
+    {
+      "word": "Gatsby",
+      "description": "静的サイト生成（SSG）に特化したReactベースのフレームワーク。",
+      "relevance_level": 3,
+      "tag": "React",
+      "roadmap_id": "gatsby",
+      "resources": [
+        {
+          "label": "Gatsby",
+          "url": "https://www.gatsbyjs.com/"
+        }
+      ]
+    },
+    {
+      "word": "Hydration",
+      "description": "SSRやSSGで配信されたHTMLに、クライアント側でイベントハンドラなどを付加してインタラクティブにするプロセス。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Key",
+      "description": "リスト内の要素を一意に識別するために設定される特別なProps。Reconciliationの効率化に不可欠。",
+      "relevance_level": 5,
+      "tag": "React"
+    },
+    {
+      "word": "Fragment",
+      "description": "DOMに余分なノードを追加せずに、複数の要素をグループ化するためのコンポーネント。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Portal",
+      "description": "子コンポーネントを親コンポーネントのDOM階層外にレンダリングする機能。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Error Boundary",
+      "description": "子コンポーネントツリー内のJavaScriptエラーをキャッチし、代替UIを表示するクラスコンポーネント。",
+      "relevance_level": 3,
+      "tag": "React",
+      "roadmap_id": "error-boundary",
+      "resources": [
+        {
+          "label": "Error Boundary",
+          "url": "https://ja.react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
+        }
+      ]
+    },
+    {
+      "word": "HOC",
+      "description": "Higher-Order Componentの略。コンポーネントロジックを再利用するためのパターン。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Custom Hook",
+      "description": "`use`で始まる関数名を持つ、独自のHooks。ロジックの再利用に役立つ。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Dependency Array",
+      "description": "`useEffect`や`useMemo`などのHooksに渡す配列。変更があったときのみ再実行されるように制御する。",
+      "relevance_level": 5,
+      "tag": "React"
+    },
+    {
+      "word": "Memoization",
+      "description": "関数の結果やコンポーネントをキャッシュし、不要な再計算や再レンダリングを避ける手法。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Immutable",
+      "description": "Stateを直接変更せず、常に新しいオブジェクトとして扱うこと。Reactの原則。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Developer Tools",
+      "description": "ブラウザ拡張機能として提供される、Reactコンポーネントのデバッグ・検査ツール。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Performance",
+      "description": "アプリケーションの速度と効率。ReactではVirtual DOMやMemoizationで最適化を図る。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Optimization",
+      "description": "アプリケーションのパフォーマンスを向上させるための手法。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Code Splitting",
+      "description": "バンドルファイルを分割し、必要なコードのみをロードして初期ロード時間を短縮する技術。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Suspense",
+      "description": "コンポーネントがデータをロードする間、待機状態を宣言的に扱うためのReact機能。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "suspense",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "Suspense",
+          "url": "https://ja.react.dev/reference/react/Suspense"
+        }
+      ]
+    },
+    {
+      "word": "Lazy",
+      "description": "コンポーネントの遅延ロードを可能にする機能（React.lazy）。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "StrictMode",
+      "description": "開発モードで潜在的な問題を検出するために、コンポーネント内のチェックを有効にするツール。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Synthetic Event",
+      "description": "ブラウザ間の互換性を確保するためにReactが提供するイベントシステムのラッパー。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Form",
+      "description": "ユーザー入力の収集に使用されるUI要素。ReactでのState管理が重要。",
+      "relevance_level": 5,
+      "tag": "React",
+      "roadmap_id": "react-hook-form",
+      "is_recommended": true,
+      "resources": [
+        {
+          "label": "React Hook Form",
+          "url": "https://react-hook-form.com/"
+        }
+      ]
+    },
+    {
+      "word": "Controlled Component",
+      "description": "フォームの入力値をReactのStateで完全に制御するコンポーネント。",
+      "relevance_level": 4,
+      "tag": "React"
+    },
+    {
+      "word": "Uncontrolled Component",
+      "description": "フォームの入力値をDOM自体で管理し、`useRef`などでアクセスするコンポーネント。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "Validation",
+      "description": "フォームに入力されたデータが正しいかどうかを確認するプロセス。",
+      "relevance_level": 3,
+      "tag": "React"
+    },
+    {
+      "word": "UI/UX",
+      "description": "ユーザーインターフェース/ユーザーエクスペリエンス。Reactが構築する主要な要素。",
+      "relevance_level": 2,
+      "tag": "React"
+    },
+    {
+      "word": "Web Development",
+      "description": "Reactが使用される開発領域全般。",
+      "relevance_level": 1,
+      "tag": "React"
+    },
+    {
+      "word": "Single Page Application",
+      "description": "SPA。単一のHTMLページで動作し、動的にコンテンツをロードするWebアプリケーション。Reactの得意分野。",
+      "relevance_level": 3,
+      "tag": "React"
+    }
+  ]
+}

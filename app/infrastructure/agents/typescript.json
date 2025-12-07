@@ -1,0 +1,556 @@
+{
+  "keywords_with_details": [
+    {
+      "word": "TypeScript",
+      "tag": "TypeScript",
+      "description": "Microsoftによって開発された、JavaScriptに静的型付けを加えたスーパーセット言語。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Static Typing",
+      "tag": "TypeScript",
+      "description": "コード実行前（コンパイル時）にデータ型をチェックする仕組み。バグの早期発見に役立つ。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Compiler",
+      "tag": "TypeScript",
+      "description": "TypeScriptコードをJavaScriptコードに変換するプログラム（`tsc`）。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Type Annotation",
+      "tag": "TypeScript",
+      "description": "変数、引数、戻り値などに明示的に型を指定すること（例: `const x: number = 10;`）。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Interface",
+      "tag": "TypeScript",
+      "description": "オブジェクトの構造（プロパティ名と型）を定義するための強力な契約。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Type",
+      "tag": "TypeScript",
+      "description": "データの種類を定義するもの。プリミティブ型、オブジェクト型、ユニオン型などがある。",
+      "relevance_level": 5
+    },
+    {
+      "word": "any",
+      "tag": "TypeScript",
+      "description": "任意の型を受け入れることを示す特別な型。型チェックを無効化する。",
+      "relevance_level": 4
+    },
+    {
+      "word": "unknown",
+      "tag": "TypeScript",
+      "description": "`any`よりも安全な任意の型。使用する前に型を絞り込む必要がある。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Union Type",
+      "tag": "TypeScript",
+      "description": "複数の型のうち、いずれか一つであることを示す型（例: `number | string`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Intersection Type",
+      "tag": "TypeScript",
+      "description": "複数の型すべてを組み合わせた新しい型（例: `TypeA & TypeB`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Literal Type",
+      "tag": "TypeScript",
+      "description": "プリミティブ型の値をそのまま型として使用するもの（例: `'success'` や `100`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Narrowing",
+      "tag": "TypeScript",
+      "description": "`if`文や`typeof`などのチェックで、コードブロック内の型をより具体的なものに絞り込むこと。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Generics",
+      "tag": "TypeScript",
+      "description": "型を引数として受け取り、複数の型で動作する再利用可能なコンポーネントを作成する機能。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Type Inference",
+      "tag": "TypeScript",
+      "description": "明示的に型を注釈しなくても、コンパイラが自動的に型を推論する機能。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Tuple",
+      "tag": "TypeScript",
+      "description": "要素の数とそれぞれの型が固定された配列。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Enum",
+      "tag": "TypeScript",
+      "description": "関連する名前付き定数の集合を定義する機能（数値または文字列）。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Declaration File",
+      "tag": "TypeScript",
+      "description": "既存のJavaScriptライブラリの型定義を記述したファイル（`.d.ts`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Ambient Declaration",
+      "tag": "TypeScript",
+      "description": "実行時のコードを生成せず、外部のJSファイルの構造だけをコンパイラに伝える宣言。",
+      "relevance_level": 3
+    },
+    {
+      "word": "tsconfig.json",
+      "tag": "TypeScript",
+      "description": "TypeScriptコンパイラの設定ファイル。コンパイルオプションを定義する。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Target",
+      "tag": "TypeScript",
+      "description": "コンパイル後のJavaScriptのバージョンを指定するコンパイラオプション（例: 'es2020'）。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Module",
+      "tag": "TypeScript",
+      "description": "コンパイル後のモジュールシステムを指定するオプション（例: 'commonjs' や 'esnext'）。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Strict Mode",
+      "tag": "TypeScript",
+      "description": "複数の厳格な型チェックルールを一括で有効にする設定（推奨）。",
+      "relevance_level": 5
+    },
+    {
+      "word": "strictNullChecks",
+      "tag": "TypeScript",
+      "description": "`null`と`undefined`をすべての型の値として許可しない厳格なチェックオプション。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Non-null Assertion",
+      "tag": "TypeScript",
+      "description": "開発者が値が`null`や`undefined`ではないと主張するために使用する演算子（`!`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Optional Chaining",
+      "tag": "TypeScript",
+      "description": "オブジェクト内の深いプロパティに安全にアクセスするための演算子（`?.`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Nullish Coalescing",
+      "tag": "TypeScript",
+      "description": "`null`または`undefined`の場合にのみデフォルト値を返す演算子（`??`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Type Assertion",
+      "tag": "TypeScript",
+      "description": "開発者がコンパイラよりも特定の型について詳しいと主張する構文（`<Type>value` や `value as Type`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Type Alias",
+      "tag": "TypeScript",
+      "description": "既存の型に新しい名前を付けるために使用する（`type MyType = ...`）。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Omit",
+      "tag": "TypeScript",
+      "description": "既存の型から特定のプロパティを除外した新しい型を作成するUtility Type。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Pick",
+      "tag": "TypeScript",
+      "description": "既存の型から特定のプロパティだけを選択した新しい型を作成するUtility Type。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Partial",
+      "tag": "TypeScript",
+      "description": "既存の型のすべてのプロパティをオプショナル（任意）にするUtility Type。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Required",
+      "tag": "TypeScript",
+      "description": "既存の型のすべてのオプショナルプロパティを必須にするUtility Type。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Readonly",
+      "tag": "TypeScript",
+      "description": "既存の型のすべてのプロパティを読み取り専用にするUtility Type。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Record",
+      "tag": "TypeScript",
+      "description": "キーの型と値の型を指定して、新しいオブジェクト型を作成するUtility Type。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Mapped Types",
+      "tag": "TypeScript",
+      "description": "既存の型に基づいて新しい型を構築するメタプログラミングの機能。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Conditional Types",
+      "tag": "TypeScript",
+      "description": "型の関係に基づいて型を選択する機能（`T extends U ? X : Y`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "keyof",
+      "tag": "TypeScript",
+      "description": "オブジェクト型のすべてのプロパティ名（文字列リテラル）をUnion Typeとして返す演算子。",
+      "relevance_level": 4
+    },
+    {
+      "word": "typeof",
+      "tag": "TypeScript",
+      "description": "JavaScriptのランタイム機能とは異なり、式の型を取得するTypeScript演算子。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Indexed Access",
+      "tag": "TypeScript",
+      "description": "他のプロパティ名を使用して型のプロパティの型を取得する（`Type['prop']`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Discriminated Union",
+      "tag": "TypeScript",
+      "description": "特定の共通プロパティ（判別子）を持つUnion Type。安全な型絞り込みに役立つ。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Decorators",
+      "tag": "TypeScript",
+      "description": "クラス、メソッド、プロパティなどの定義にメタデータを追加する実験的な機能。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Class",
+      "tag": "TypeScript",
+      "description": "オブジェクト指向プログラミングの概念。TypeScriptでは型安全に利用できる。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Access Modifiers",
+      "tag": "TypeScript",
+      "description": "クラスのメンバーの可視性（`public`, `private`, `protected`）を制御するキーワード。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Inheritance",
+      "tag": "TypeScript",
+      "description": "クラスが別のクラスのプロパティやメソッドを受け継ぐこと。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Abstract Class",
+      "tag": "TypeScript",
+      "description": "インスタンス化できず、サブクラスに継承されることのみを目的としたクラス。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Readonly Property",
+      "tag": "TypeScript",
+      "description": "一度初期化されると値を変更できないプロパティ。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Type Guard",
+      "tag": "TypeScript",
+      "description": "ランタイムチェック（`instanceof`, `in`, `typeof`）を使用して、コードブロック内の型を絞り込むための式。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Custom Type Guard",
+      "tag": "TypeScript",
+      "description": "ユーザー定義の関数で型を絞り込む機能（`param is Type`の形で戻り値を指定）。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Ambient Module",
+      "tag": "TypeScript",
+      "description": "型定義のない外部のモジュール（JSファイルなど）を扱うための宣言。",
+      "relevance_level": 3
+    },
+    {
+      "word": "JSDoc",
+      "tag": "TypeScript",
+      "description": "JavaScriptコードにコメントで型情報を記述する標準的な形式。TypeScriptでも利用される。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Transpilation",
+      "tag": "TypeScript",
+      "description": "TypeScriptをJavaScriptに変換するプロセス。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Source Map",
+      "tag": "TypeScript",
+      "description": "コンパイル後のJSコードと元のTSコードを関連付け、デバッグを可能にするファイル。",
+      "relevance_level": 3
+    },
+    {
+      "word": "DefinitelyTyped",
+      "tag": "TypeScript",
+      "description": "型定義ファイル（`.d.ts`）をホストするコミュニティ主導のリポジトリ。",
+      "relevance_level": 3
+    },
+    {
+      "word": "@types",
+      "tag": "TypeScript",
+      "description": "DefinitelyTypedから型定義をインストールするためにnpmで使用されるスコープ。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Declaration Merging",
+      "tag": "TypeScript",
+      "description": "同じ名前の複数の宣言（インターフェース、名前空間など）を1つに結合する機能。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Namespace",
+      "tag": "TypeScript",
+      "description": "コードを論理的にグループ化し、グローバルスコープの衝突を避けるための古い機能。",
+      "relevance_level": 2
+    },
+    {
+      "word": "ES Module",
+      "tag": "TypeScript",
+      "description": "`import`/`export`構文で定義される、JavaScriptの標準的なモジュール形式。",
+      "relevance_level": 3
+    },
+    {
+      "word": "CommonJS",
+      "tag": "TypeScript",
+      "description": "`require`/`module.exports`構文で定義される、主にNode.jsで使われるモジュール形式。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Never Type",
+      "tag": "TypeScript",
+      "description": "決して到達しない可能性のある値の型（例: 例外を投げる関数や無限ループ）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Void Type",
+      "tag": "TypeScript",
+      "description": "関数が何も値を返さないことを示す型。",
+      "relevance_level": 4
+    },
+    {
+      "word": "object",
+      "tag": "TypeScript",
+      "description": "プリミティブではないすべての値を表す型。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Literal Inference",
+      "tag": "TypeScript",
+      "description": "変数が`const`で宣言された場合に、リテラル型として推論される動作。",
+      "relevance_level": 3
+    },
+    {
+      "word": "as const",
+      "tag": "TypeScript",
+      "description": "オブジェクトや配列全体を可能な限り最も具体的なリテラル型として推論させるためのアサーション。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Template Literal Type",
+      "tag": "TypeScript",
+      "description": "文字列リテラルと他の型を組み合わせて新しい文字列型を生成する機能。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Type Parameter",
+      "tag": "TypeScript",
+      "description": "ジェネリクスで使用されるプレースホルダー型（例: `Array<T>`の`T`）。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Type Constraint",
+      "tag": "TypeScript",
+      "description": "ジェネリクスで、型パラメーターが満たすべき最小限の要件を定義すること（`extends`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Utility Type",
+      "tag": "TypeScript",
+      "description": "既存の型を変換したり操作したりするための組み込みの型（`Partial`, `Pick`など）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Type Compatibility",
+      "tag": "TypeScript",
+      "description": "異なる型同士の互換性を決定するルール（主に構造的サブタイピング）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Structural Typing",
+      "tag": "TypeScript",
+      "description": "型の名前ではなく、その構造（メンバー）に基づいて互換性を判断する仕組み。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Nominal Typing",
+      "tag": "TypeScript",
+      "description": "型の名前によって互換性を判断する仕組み（TypeScriptのデフォルトではない）。",
+      "relevance_level": 2
+    },
+    {
+      "word": "ReadonlyArray",
+      "tag": "TypeScript",
+      "description": "要素を読み取ることのみが可能で、変更ができない配列型。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Rest Parameters",
+      "tag": "TypeScript",
+      "description": "関数が可変長引数を受け取るための構文。配列型として型付けされる。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Spread Syntax",
+      "tag": "TypeScript",
+      "description": "配列やオブジェクトを展開する構文。型推論と組み合わせて利用される。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Destructuring",
+      "tag": "TypeScript",
+      "description": "配列やオブジェクトから値を抽出する構文。型推論が適用される。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Async Iterator",
+      "tag": "TypeScript",
+      "description": "非同期的に反復処理を行うためのイテレーターの型定義。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Yield",
+      "tag": "TypeScript",
+      "description": "ジェネレーター関数内で、値を一時停止・返却するために使用されるキーワード。",
+      "relevance_level": 2
+    },
+    {
+      "word": "JSX/TSX",
+      "tag": "TypeScript",
+      "description": "Reactで使用されるXMLライクな構文（TSXはTypeScriptファイル内のJSX）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Declaration File Generator",
+      "tag": "TypeScript",
+      "description": "TypeScriptコードから自動的に型定義ファイル（`.d.ts`）を生成するツール。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Code Intelligence",
+      "tag": "TypeScript",
+      "description": "エディタ（VS Codeなど）での自動補完、リファクタリング、エラーチェックなどの機能。",
+      "relevance_level": 5
+    },
+    {
+      "word": "LSP (Language Server Protocol)",
+      "tag": "TypeScript",
+      "description": "エディタと言語サーバー間の通信を標準化するためのプロトコル。TypeScriptの優れた体験に不可欠。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Build Tool",
+      "tag": "TypeScript",
+      "description": "TypeScriptのコンパイルやバンドルを行うツール（Webpack, Rollup, Vite, esbuild）。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Nodemon",
+      "tag": "TypeScript",
+      "description": "Node.js開発でファイルの変更を監視し、自動的にアプリケーションを再起動するツール。",
+      "relevance_level": 2
+    },
+    {
+      "word": "Source Control",
+      "tag": "TypeScript",
+      "description": "Gitなどのバージョン管理システム。",
+      "relevance_level": 1
+    },
+    {
+      "word": "Testing Framework",
+      "tag": "TypeScript",
+      "description": "テストを実行するためのライブラリ（Jest, Mochaなど）。TypeScriptコードのテストに使用。",
+      "relevance_level": 3
+    },
+    {
+      "word": "Linting",
+      "tag": "TypeScript",
+      "description": "コードの品質とスタイルをチェックするプロセス（ESLintと`@typescript-eslint`）。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Configuration",
+      "tag": "TypeScript",
+      "description": "コンパイラや開発環境の設定を行うこと。",
+      "relevance_level": 4
+    },
+    {
+      "word": "ESLint",
+      "tag": "TypeScript",
+      "description": "JavaScript/TypeScriptの静的解析ツール。コード品質を維持するために不可欠。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Codebase",
+      "tag": "TypeScript",
+      "description": "アプリケーションのすべてのソースコード。",
+      "relevance_level": 1
+    },
+    {
+      "word": "Refactoring",
+      "tag": "TypeScript",
+      "description": "コードの外部動作を変えずに、内部構造を改善する作業。型情報で安全に実行可能。",
+      "relevance_level": 4
+    },
+    {
+      "word": "Type System",
+      "tag": "TypeScript",
+      "description": "TypeScriptが型を管理し、エラーをチェックする一連のルールとメカニズム。",
+      "relevance_level": 5
+    },
+    {
+      "word": "Compiler API",
+      "tag": "TypeScript",
+      "description": "プログラムからTypeScriptコンパイラの機能にアクセスするためのAPI。",
+      "relevance_level": 2
+    },
+    {
+      "word": "AST (Abstract Syntax Tree)",
+      "tag": "TypeScript",
+      "description": "コンパイラがコードを理解するために使用する、プログラムの構造の木表現。",
+      "relevance_level": 2
+    }
+  ]
+}
