@@ -98,4 +98,3 @@ def create_initial_state(user_input: str) -> AgentState:
         messages=[],
         current_agent="",
     )
-

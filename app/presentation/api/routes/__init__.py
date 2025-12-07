@@ -1,7 +1,7 @@
 """API routes."""
 
-from .eng_career_diagnosis_router import router as eng_career_diagnosis_router
+from .learning_roadmap_router import router as learning_roadmap_router
 
 __all__ = [
-    "eng_career_diagnosis_router",
+    "learning_roadmap_router",
 ]
