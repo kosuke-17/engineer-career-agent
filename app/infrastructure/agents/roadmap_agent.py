@@ -220,6 +220,7 @@ def _build_roadmap_messages(
 ## 調査結果
 {context_text}
 
+## サブタグ（重要キーワード）
 {sub_tags_text}
 
 上記の情報を元に、JSON形式でロードマップを生成してください。
