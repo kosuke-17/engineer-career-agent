@@ -11,10 +11,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, field_validator
 
-from app.infrastructure.agents.orchestrator_agent import orchestrator_agent
-from app.infrastructure.agents.research_agent import research_agent
-from app.infrastructure.agents.roadmap_agent import roadmap_agent, roadmap_agent_stream
-from app.infrastructure.agents.state import AgentState, create_initial_state
+from app.application.use_cases.learning_roadmap import (
+    AnalyzeTechnologiesUseCase,
+    GenerateRoadmapStreamUseCase,
+    GenerateRoadmapUseCase,
+)
+from app.infrastructure.agents.state import AgentState
 from app.presentation.api.dependencies import require_session
 
 router = APIRouter()
@@ -218,47 +220,27 @@ async def analyze_technologies(
     Returns:
         AnalyzeResponseModel with extracted tags and research context.
     """
-    # Step 1: Extract tags using orchestrator
-    state = create_initial_state(request.user_input)
-    orchestrator_result = await orchestrator_agent(state)
+    use_case = AnalyzeTechnologiesUseCase()
+    result = await use_case.execute(request.user_input)
 
-    if orchestrator_result.get("error"):
-        raise HTTPException(
-            status_code=500, detail=f"Orchestrator error: {orchestrator_result.get('error')}"
-        )
+    error = result.get("error")
+    if error:
+        raise HTTPException(status_code=500, detail=error)
 
-    tags = orchestrator_result.get("tags", [])
+    tags = result.get("tags", [])
     if not tags:
         raise HTTPException(status_code=500, detail="No tags extracted from user input")
 
-    # Step 2: Research technologies using research agent
-    research_state: AgentState = {
-        "user_input": request.user_input,
-        "tags": tags,
-        "context": [],
-        "roadmap_json": {},
-        "error": None,
-        "messages": [],
-        "current_agent": "",
-    }
-
-    research_result = await research_agent(research_state)
-
-    if research_result.get("error"):
-        raise HTTPException(
-            status_code=500, detail=f"Research error: {research_result.get('error')}"
-        )
-
     # Convert sub_tags dicts to SubTag models
-    sub_tags_raw = orchestrator_result.get("sub_tags", [])
+    sub_tags_raw = result.get("sub_tags", [])
     sub_tags_models = [SubTag(**st) for st in sub_tags_raw if isinstance(st, dict)]
 
     return AnalyzeResponse(
         user_input=request.user_input,
         tags=tags,
         sub_tags=sub_tags_models,
-        context=research_result.get("context", []),
-        error=research_result.get("error"),
+        context=result.get("context", []),
+        error=error,
     )
 
 
@@ -279,18 +261,20 @@ async def generate_roadmap(
     """
     state = _build_roadmap_state(request)
 
-    result = await roadmap_agent(state)
+    use_case = GenerateRoadmapUseCase()
+    result = await use_case.execute(state)
 
-    if result.get("error"):
-        raise HTTPException(status_code=500, detail=result.get("error"))
+    error = result.get("error")
+    if error:
+        raise HTTPException(status_code=500, detail=error)
 
-    roadmap = result.get("roadmap_json", {})
+    roadmap = result.get("roadmap", {})
     if not roadmap:
         raise HTTPException(status_code=500, detail="Failed to generate roadmap")
 
     return RoadmapResponse(
         roadmap=roadmap,
-        error=result.get("error"),
+        error=error,
     )
 
 
@@ -314,24 +298,8 @@ async def generate_roadmap_stream(
     async def stream_ndjson() -> AsyncGenerator[str, None]:
         """Generate JSON Lines from roadmap agent stream."""
         try:
-            # Validate state before streaming
-            if not state.get("context"):
-                error_event = {
-                    "type": "error",
-                    "error": "コンテキストが空です。先に/analyzeエンドポイントを呼び出してください。",
-                }
-                yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
-                return
-
-            if not state.get("tags"):
-                error_event = {
-                    "type": "error",
-                    "error": "タグが空です。",
-                }
-                yield f"{json.dumps(error_event, ensure_ascii=False)}\n"
-                return
-
-            async for event in roadmap_agent_stream(state):
+            use_case = GenerateRoadmapStreamUseCase()
+            async for event in use_case.execute(state):
                 # Convert event to JSON line
                 try:
                     json_line = json.dumps(event, ensure_ascii=False)
