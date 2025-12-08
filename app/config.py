@@ -132,6 +132,24 @@ class Settings(BaseSettings):
     # 環境変数: TEMPERATURE
     temperature: float = Field(default=0.7, description="LLM temperature")
 
+    # === LangSmith (Monitoring) Configuration ===
+    # 環境変数: LANGCHAIN_TRACING
+    langchain_tracing: bool = Field(
+        default=False, description="Enable LangSmith tracing (set to true to enable)"
+    )
+    # 環境変数: LANGCHAIN_API_KEY
+    langchain_api_key: str = Field(default="", description="LangSmith API key for monitoring")
+    # 環境変数: LANGCHAIN_PROJECT
+    langchain_project: str = Field(
+        default="learning-path-agent",
+        description="LangSmith project name for organizing traces",
+    )
+    # 環境変数: LANGCHAIN_ENDPOINT
+    langchain_endpoint: str = Field(
+        default="https://api.smith.langchain.com",
+        description="LangSmith API endpoint",
+    )
+
     # === pydantic_settings の設定 ===
     model_config = {
         "env_file": ".env",  # .envファイルから環境変数を読み込む

@@ -1,5 +1,6 @@
 """LLM Factory for creating LLM instances based on provider configuration."""
 
+import os
 from typing import Optional
 
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -13,6 +14,31 @@ class LLMFactory:
     def __init__(self, settings: Optional[Settings] = None):
         """Initialize the factory with settings."""
         self.settings = settings or get_settings()
+        self._setup_langsmith()
+
+    def _setup_langsmith(self) -> None:
+        """Setup LangSmith tracing if enabled.
+
+        LangSmith is LangChain's monitoring and observability platform.
+        It tracks LLM calls, latency, costs, and errors.
+
+        To enable:
+        1. Set LANGCHAIN_TRACING_V2=true
+        2. Set LANGCHAIN_API_KEY=your-api-key (get from https://smith.langchain.com)
+        3. Optionally set LANGCHAIN_PROJECT=project-name
+        """
+        if self.settings.langchain_tracing:
+            # Set environment variables for LangSmith
+            os.environ["LANGCHAIN_TRACING"] = "true"
+
+            if self.settings.langchain_api_key:
+                os.environ["LANGCHAIN_API_KEY"] = self.settings.langchain_api_key
+
+            if self.settings.langchain_project:
+                os.environ["LANGCHAIN_PROJECT"] = self.settings.langchain_project
+
+            if self.settings.langchain_endpoint:
+                os.environ["LANGCHAIN_ENDPOINT"] = self.settings.langchain_endpoint
 
     def create_chat_model(
         self,
