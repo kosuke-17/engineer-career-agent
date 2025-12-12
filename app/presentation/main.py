@@ -7,6 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
+from app.presentation.api.routes.deep_agent_router import (
+    router as deep_agent_router,
+)
 from app.presentation.api.routes.learning_roadmap_router import (
     router as learning_roadmap_router,
 )
@@ -48,6 +51,11 @@ def create_app() -> FastAPI:
         learning_roadmap_router,
         prefix="/api/learning-roadmap",
         tags=["Learning Roadmap"],
+    )
+    app.include_router(
+        deep_agent_router,
+        prefix="/api/deep-agent",
+        tags=["Deep Agent"],
     )
 
     # Health check endpoints
